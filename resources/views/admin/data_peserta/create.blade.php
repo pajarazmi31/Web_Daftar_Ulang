@@ -32,7 +32,21 @@
     </div>
 
     <form action="{{ route('data-peserta.store') }}" method="POST" class="space-y-6 text-sm">
-        @csrf
+        @csrf   
+
+        @if ($errors->any())
+        <div style="background-color: #fee2e2; color: #991b1b; padding: 1.25rem; margin-bottom: 2rem; border-radius: 0.75rem; border: 1px solid #fca5a5; font-family: sans-serif;">
+            <h3 style="font-weight: bold; margin-bottom: 0.5rem; font-size: 1.1rem;">⚠️ Gagal Menyimpan! Laravel Menolak Data Berikut:</h3>
+            <ul style="list-style-type: disc; margin-left: 1.5rem; line-height: 1.6;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <p style="margin-top: 0.75rem; font-size: 0.9rem; color: #7f1d1d; font-style: italic;">
+                *Catatan: Masalah ini membuat Laravel melakukan redirect back (halaman refresh sendiri).
+            </p>
+        </div>
+    @endif
 
         <input type="hidden" name="tab" x-model="tab">
 
@@ -42,11 +56,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">1. Nama Lengkap (Sesuai Akta/Ijazah)</label>
-                    <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition">
+                    <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition">
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">2. Jenis Kelamin</label>
-                    <select name="jenis_kelamin" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
+                    <select name="jenis_kelamin" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
                         <option value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                         <option value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     </select>
@@ -60,22 +74,22 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">4. NIK / KITAS (WNA)</label>
-                    <input type="text" name="nik" value="{{ old('nik') }}" required maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
+                    <input type="text" name="nik" value="{{ old('nik') }}" maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">5. No. Kartu Keluarga (KK)</label>
-                    <input type="text" name="no_kk" value="{{ old('no_kk') }}" required maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
+                    <input type="text" name="no_kk" value="{{ old('no_kk') }}" maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">6. Tempat Lahir</label>
-                    <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" required class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                    <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir') }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">7. Tanggal Lahir</label>
-                    <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                    <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">8. No. Registrasi Akta Lahir</label>
@@ -83,9 +97,9 @@
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">9. Agama & Kepercayaan</label>
-                    <select name="agama" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
+                    <select name="agama" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Islam', 'Kristen Protestan', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu', 'Kepercayaan Kepada Tuhan YME'] as $agama)
-                            <option value="{{ $agama }}" {{ old('agama') == $agama ? 'selected' : '' }}>{{ $agama }}</option>
+                        <option value="{{ $agama }}" {{ old('agama') == $agama ? 'selected' : '' }}>{{ $agama }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -101,7 +115,7 @@
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Nama Negara Asal</label>
-                    <input type="text" name="negara_asal" value="{{ old('negara_asal') }}" placeholder="Kosongkan jika WNI" class="w-full px-4 py-2 border border-slate-200 rounded-xl" :required="kwn === 'WNA'">
+                    <input type="text" name="negara_asal" value="{{ old('negara_asal') }}" placeholder="Kosongkan jika WNI" class="w-full px-4 py-2 border border-slate-200 rounded-xl" :="kwn === 'WNA'">
                 </div>
             </div>
 
@@ -110,27 +124,27 @@
                     <label class="block text-slate-600 font-medium mb-2">11. Berkebutuhan Khusus (Bisa Pilih Lebih Dari Satu)</label>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
                         @foreach([
-                            'Tidak' => 'Tidak Ada',
-                            'Netra' => 'A - Netra (Tunanetra)',
-                            'Rungu' => 'B - Rungu (Tunarungu)',
-                            'Grahita Ringan' => 'C - Grahita Ringan',
-                            'Grahita Sedang' => 'C1 - Grahita Sedang',
-                            'Daksa Ringan' => 'D - Daksa Ringan',
-                            'Daksa Sedang' => 'D1 - Daksa Sedang',
-                            'Laras' => 'E - Laras (Tunalaras)',
-                            'Wicara' => 'F - Wicara',
-                            'Tuna Ganda' => 'G - Tuna Ganda',
-                            'Hiperaktif' => 'H - Hiperaktif',
-                            'Cerdas Istimewa' => 'I - Cerdas Istimewa',
-                            'Bakat Istimewa' => 'J - Bakat Istimewa',
-                            'Kesulitan Belajar' => 'K - Kesulitan Belajar',
-                            'Narkoba' => 'N - Korban Narkoba',
-                            'Indigo' => 'O - Indigo',
-                            'Down Syndrome' => 'P - Down Syndrome',
-                            'Autis' => 'Q - Autis'
+                        'Tidak' => 'Tidak Ada',
+                        'Netra' => 'A - Netra (Tunanetra)',
+                        'Rungu' => 'B - Rungu (Tunarungu)',
+                        'Grahita Ringan' => 'C - Grahita Ringan',
+                        'Grahita Sedang' => 'C1 - Grahita Sedang',
+                        'Daksa Ringan' => 'D - Daksa Ringan',
+                        'Daksa Sedang' => 'D1 - Daksa Sedang',
+                        'Laras' => 'E - Laras (Tunalaras)',
+                        'Wicara' => 'F - Wicara',
+                        'Tuna Ganda' => 'G - Tuna Ganda',
+                        'Hiperaktif' => 'H - Hiperaktif',
+                        'Cerdas Istimewa' => 'I - Cerdas Istimewa',
+                        'Bakat Istimewa' => 'J - Bakat Istimewa',
+                        'Kesulitan Belajar' => 'K - Kesulitan Belajar',
+                        'Narkoba' => 'N - Korban Narkoba',
+                        'Indigo' => 'O - Indigo',
+                        'Down Syndrome' => 'P - Down Syndrome',
+                        'Autis' => 'Q - Autis'
                         ] as $value => $label)
                         <label class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-100/50 transition">
-                            <input type="checkbox" name="kebutuhan_khusus[]" value="{{ $value }}"
+                            <input type="checkbox" name="berkebutuhan_khusus[]" value="{{ $value }}"
                                 {{ is_array(old('berkebutuhan_khusus')) && in_array($value, old('berkebutuhan_khusus')) ? 'checked' : '' }}
                                 class="mt-0.5 w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
                             <span class="text-xs text-slate-700 font-medium">{{ $label }}</span>
@@ -142,7 +156,7 @@
 
             <div>
                 <label class="block text-slate-600 font-medium mb-1">12. Alamat Jalan / Perumahan / No. Rumah</label>
-                <textarea name="alamat" rows="2" required placeholder="Contoh: Jl. Kemanggisan, Komp Griya Adam, No 40" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition">{{ old('alamat') }}</textarea>
+                <textarea name="alamat" rows="2" placeholder="Contoh: Jl. Kemanggisan, Komp Griya Adam, No 40" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition">{{ old('alamat') }}</textarea>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -160,11 +174,11 @@
                 </div>
                 <div class="col-span-2 sm:col-span-1">
                     <label class="block text-slate-600 font-medium mb-1">16. Kelurahan/Desa</label>
-                    <input type="text" name="desa_kelurahan" value="{{ old('desa_kelurahan') }}" required class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                    <input type="text" name="desa_kelurahan" value="{{ old('desa_kelurahan') }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">17. Kecamatan</label>
-                    <input type="text" name="kecamatan" value="{{ old('kecamatan') }}" required class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                    <input type="text" name="kecamatan" value="{{ old('kecamatan') }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">18. Kode Pos</label>
@@ -185,7 +199,7 @@
                     <label class="block text-slate-600 font-medium mb-1">21. Tempat Tinggal</label>
                     <select name="tempat_tinggal" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Bersama Orang Tua', 'Wali', 'Kos', 'Asrama', 'Panti Asuhan'] as $tt)
-                            <option value="{{ $tt }}" {{ old('tempat_tinggal') == $tt ? 'selected' : '' }}>{{ $tt }}</option>
+                        <option value="{{ $tt }}" {{ old('tempat_tinggal') == $tt ? 'selected' : '' }}>{{ $tt }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -193,7 +207,7 @@
                     <label class="block text-slate-600 font-medium mb-1">22. Moda Transportasi</label>
                     <select name="moda_transportasi" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Jalan Kaki', 'Kendaraan Pribadi', 'Kendaraan Umum', 'Jemputan Sekolah', 'Kereta Api', 'Ojek', 'Andong/Bendi/Sado/Dokar/Delman/Beca', 'Perahu Penyeberangan/Rakit/Getek', 'Lainnya'] as $trans)
-                            <option value="{{ $trans }}" {{ old('moda_transportasi') == $trans ? 'selected' : '' }}>{{ $trans }}</option>
+                        <option value="{{ $trans }}" {{ old('moda_transportasi') == $trans ? 'selected' : '' }}>{{ $trans }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -269,9 +283,9 @@
                     <label class="block text-slate-600 font-medium mb-1">32. Penghasilan Bulanan</label>
                     <select name="penghasilan_ayah" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Rentang --</option>
-                        @foreach(['< 500.000' => '< Rp. 500.000', '500.000 - 999.999' => 'Rp. 500.000 - Rp. 999.999', '1.000.000 - 1.999.999' => 'Rp. 1.000.000 - Rp. 1.999.999', '2.000.000 - 4.999.999' => 'Rp. 2.000.000 - Rp. 4.999.999', '5.000.000 - 20.000.000' => 'Rp. 5.000.000 - Rp. 20.000.000', '> 20.000.000' => '> Rp. 20.000.000', 'Tidak Berpenghasilan' => 'Tidak Berpenghasilan'] as $val => $text)
-                        <option value="{{ $val }}" {{ old('penghasilan_ayah') == $val ? 'selected' : '' }}>{{ $text }}</option>
-                        @endforeach
+                        @foreach(['< 500.000'=> '< Rp. 500.000', '500.000 - 999.999'=> 'Rp. 500.000 - Rp. 999.999', '1.000.000 - 1.999.999' => 'Rp. 1.000.000 - Rp. 1.999.999', '2.000.000 - 4.999.999' => 'Rp. 2.000.000 - Rp. 4.999.999', '5.000.000 - 20.000.000' => 'Rp. 5.000.000 - Rp. 20.000.000', '> 20.000.000' => '> Rp. 20.000.000', 'Tidak Berpenghasilan' => 'Tidak Berpenghasilan'] as $val => $text)
+                                <option value="{{ $val }}" {{ old('penghasilan_ayah') == $val ? 'selected' : '' }}>{{ $text }}</option>
+                                @endforeach
                     </select>
                 </div>
             </div>
@@ -280,24 +294,24 @@
                     <label class="block text-slate-600 font-medium mb-1">33. Berkebutuhan Khusus Ayah</label>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
                         @foreach([
-                            'Tidak' => 'Tidak Ada',
-                            'Netra' => 'A - Netra (Tunanetra)',
-                            'Rungu' => 'B - Rungu (Tunarungu)',
-                            'Grahita Ringan' => 'C - Grahita Ringan',
-                            'Grahita Sedang' => 'C1 - Grahita Sedang',
-                            'Daksa Ringan' => 'D - Daksa Ringan',
-                            'Daksa Sedang' => 'D1 - Daksa Sedang',
-                            'Laras' => 'E - Laras (Tunalaras)',
-                            'Wicara' => 'F - Wicara',
-                            'Tuna Ganda' => 'G - Tuna Ganda',
-                            'Hiperaktif' => 'H - Hiperaktif',
-                            'Cerdas Istimewa' => 'I - Cerdas Istimewa',
-                            'Bakat Istimewa' => 'J - Bakat Istimewa',
-                            'Kesulitan Belajar' => 'K - Kesulitan Belajar',
-                            'Narkoba' => 'N - Korban Narkoba',
-                            'Indigo' => 'O - Indigo',
-                            'Down Syndrome' => 'P - Down Syndrome',
-                            'Autis' => 'Q - Autis'
+                        'Tidak' => 'Tidak Ada',
+                        'Netra' => 'A - Netra (Tunanetra)',
+                        'Rungu' => 'B - Rungu (Tunarungu)',
+                        'Grahita Ringan' => 'C - Grahita Ringan',
+                        'Grahita Sedang' => 'C1 - Grahita Sedang',
+                        'Daksa Ringan' => 'D - Daksa Ringan',
+                        'Daksa Sedang' => 'D1 - Daksa Sedang',
+                        'Laras' => 'E - Laras (Tunalaras)',
+                        'Wicara' => 'F - Wicara',
+                        'Tuna Ganda' => 'G - Tuna Ganda',
+                        'Hiperaktif' => 'H - Hiperaktif',
+                        'Cerdas Istimewa' => 'I - Cerdas Istimewa',
+                        'Bakat Istimewa' => 'J - Bakat Istimewa',
+                        'Kesulitan Belajar' => 'K - Kesulitan Belajar',
+                        'Narkoba' => 'N - Korban Narkoba',
+                        'Indigo' => 'O - Indigo',
+                        'Down Syndrome' => 'P - Down Syndrome',
+                        'Autis' => 'Q - Autis'
                         ] as $value => $label)
                         <label class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-100/50 transition">
                             <input type="checkbox" name="kebutuhan_khusus_ayah[]" value="{{ $value }}"
@@ -352,9 +366,9 @@
                     <label class="block text-slate-600 font-medium mb-1">39. Penghasilan Bulanan Ibu</label>
                     <select name="penghasilan_ibu" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Rentang --</option>
-                        @foreach(['< 500.000' => '< Rp. 500.000', '500.000 - 999.999' => 'Rp. 500.000 - Rp. 999.999', '1.000.000 - 1.999.999' => 'Rp. 1.000.000 - Rp. 1.999.999', '2.000.000 - 4.999.999' => 'Rp. 2.000.000 - Rp. 4.999.999', '5.000.000 - 20.000.000' => 'Rp. 5.000.000 - Rp. 20.000.000', '> 20.000.000' => '> Rp. 20.000.000', 'Tidak Berpenghasilan' => 'Tidak Berpenghasilan'] as $val => $text)
-                        <option value="{{ $val }}" {{ old('penghasilan_ibu') == $val ? 'selected' : '' }}>{{ $text }}</option>
-                        @endforeach
+                        @foreach(['< 500.000'=> '< Rp. 500.000', '500.000 - 999.999'=> 'Rp. 500.000 - Rp. 999.999', '1.000.000 - 1.999.999' => 'Rp. 1.000.000 - Rp. 1.999.999', '2.000.000 - 4.999.999' => 'Rp. 2.000.000 - Rp. 4.999.999', '5.000.000 - 20.000.000' => 'Rp. 5.000.000 - Rp. 20.000.000', '> 20.000.000' => '> Rp. 20.000.000', 'Tidak Berpenghasilan' => 'Tidak Berpenghasilan'] as $val => $text)
+                                <option value="{{ $val }}" {{ old('penghasilan_ibu') == $val ? 'selected' : '' }}>{{ $text }}</option>
+                                @endforeach
                     </select>
                 </div>
             </div>
@@ -364,24 +378,24 @@
                     <label class="block text-slate-600 font-medium mb-1">40. Berkebutuhan Khusus Ibu</label>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
                         @foreach([
-                            'Tidak' => 'Tidak Ada',
-                            'Netra' => 'A - Netra (Tunanetra)',
-                            'Rungu' => 'B - Rungu (Tunarungu)',
-                            'Grahita Ringan' => 'C - Grahita Ringan',
-                            'Grahita Sedang' => 'C1 - Grahita Sedang',
-                            'Daksa Ringan' => 'D - Daksa Ringan',
-                            'Daksa Sedang' => 'D1 - Daksa Sedang',
-                            'Laras' => 'E - Laras (Tunalaras)',
-                            'Wicara' => 'F - Wicara',
-                            'Tuna Ganda' => 'G - Tuna Ganda',
-                            'Hiperaktif' => 'H - Hiperaktif',
-                            'Cerdas Istimewa' => 'I - Cerdas Istimewa',
-                            'Bakat Istimewa' => 'J - Bakat Istimewa',
-                            'Kesulitan Belajar' => 'K - Kesulitan Belajar',
-                            'Narkoba' => 'N - Korban Narkoba',
-                            'Indigo' => 'O - Indigo',
-                            'Down Syndrome' => 'P - Down Syndrome',
-                            'Autis' => 'Q - Autis'
+                        'Tidak' => 'Tidak Ada',
+                        'Netra' => 'A - Netra (Tunanetra)',
+                        'Rungu' => 'B - Rungu (Tunarungu)',
+                        'Grahita Ringan' => 'C - Grahita Ringan',
+                        'Grahita Sedang' => 'C1 - Grahita Sedang',
+                        'Daksa Ringan' => 'D - Daksa Ringan',
+                        'Daksa Sedang' => 'D1 - Daksa Sedang',
+                        'Laras' => 'E - Laras (Tunalaras)',
+                        'Wicara' => 'F - Wicara',
+                        'Tuna Ganda' => 'G - Tuna Ganda',
+                        'Hiperaktif' => 'H - Hiperaktif',
+                        'Cerdas Istimewa' => 'I - Cerdas Istimewa',
+                        'Bakat Istimewa' => 'J - Bakat Istimewa',
+                        'Kesulitan Belajar' => 'K - Kesulitan Belajar',
+                        'Narkoba' => 'N - Korban Narkoba',
+                        'Indigo' => 'O - Indigo',
+                        'Down Syndrome' => 'P - Down Syndrome',
+                        'Autis' => 'Q - Autis'
                         ] as $value => $label)
                         <label class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-100/50 transition">
                             <input type="checkbox" name="kebutuhan_khusus_ibu[]" value="{{ $value }}"
@@ -437,9 +451,9 @@
                     <label class="block text-slate-600 font-medium mb-1">46. Penghasilan Bulanan Wali</label>
                     <select name="penghasilan_wali" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white shadow-sm">
                         <option value="">-- Pilih Rentang --</option>
-                        @foreach(['< 500.000' => '< Rp. 500.000', '500.000 - 999.999' => 'Rp. 500.000 - Rp. 999.999', '1.000.000 - 1.999.999' => 'Rp. 1.000.000 - Rp. 1.999.999', '2.000.000 - 4.999.999' => 'Rp. 2.000.000 - Rp. 4.999.999', '5.000.000 - 20.000.000' => 'Rp. 5.000.000 - Rp. 20.000.000', '> 20.000.000' => '> Rp. 20.000.000', 'Tidak Berpenghasilan' => 'Tidak Berpenghasilan'] as $val => $text)
-                        <option value="{{ $val }}" {{ old('penghasilan_wali') == $val ? 'selected' : '' }}>{{ $text }}</option>
-                        @endforeach
+                        @foreach(['< 500.000'=> '< Rp. 500.000', '500.000 - 999.999'=> 'Rp. 500.000 - Rp. 999.999', '1.000.000 - 1.999.999' => 'Rp. 1.000.000 - Rp. 1.999.999', '2.000.000 - 4.999.999' => 'Rp. 2.000.000 - Rp. 4.999.999', '5.000.000 - 20.000.000' => 'Rp. 5.000.000 - Rp. 20.000.000', '> 20.000.000' => '> Rp. 20.000.000', 'Tidak Berpenghasilan' => 'Tidak Berpenghasilan'] as $val => $text)
+                                <option value="{{ $val }}" {{ old('penghasilan_wali') == $val ? 'selected' : '' }}>{{ $text }}</option>
+                                @endforeach
                     </select>
                 </div>
             </div>
@@ -501,31 +515,35 @@
                     <label class="block text-slate-600 font-medium mb-1">Jenis Kesejahteraan</label>
                     <select name="jenis_kesejahteraan" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Jenis Bantuan/Kesejahteraan --</option>
-                        @foreach(['PKH', 'PIP', 'KKS', 'KPS', 'Lainnya'] as $kes)
+                        @foreach(['PKH',
+                        'PIP',
+                        'Kartu Perlindungan Sosial',
+                        'Kartu Keluarga Sejahtera',
+                        'Kartu Kesehatan'] as $kes)
                         <option value="{{ $kes }}" {{ old('jenis_kesejahteraan') == $kes ? 'selected' : '' }}>{{ $kes }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Nama Di Kartu</label>
-                    <input type="text" name="nama_pemegang_kartu" value="{{ old('nama_pemegang_kartu') }}"  class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                    <input type="text" name="nama_pemegang_kartu" value="{{ old('nama_pemegang_kartu') }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">No Kartu</label>
-                    <input type="text" name="nomor_kartu_kesejahteraan" value="{{ old('nomor_kartu_kesejahteraan') }}"  class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                    <input type="text" name="nomor_kartu_kesejahteraan" value="{{ old('nomor_kartu_kesejahteraan') }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
             </div>
         </div>
 
         <div x-show="tab === 'beasiswa'" class="bg-white rounded-2xl border border-slate-100 p-6 space-y-4 shadow-sm" x-transition>
             <h3 class="text-base font-bold text-slate-800 border-b border-slate-100 pb-2 mb-4">Bagian VI: Informasi Beasiswa (Jika Ada)</h3>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Jenis Beasiswa</label>
                     <select name="jenis_beasiswa" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Jenis Beasiswa --</option>
-                        @foreach(['Anak berprestasi', 'Anak Miskin', 'Pendidikan', 'Unggulan'] as $kes)
+                        @foreach(['Anak Berprestasi', 'Anak Miskin', 'Pendidikan', 'Unggulan'] as $kes)
                         <option value="{{ $kes }}" {{ old('jenis_beasiswa') == $kes ? 'selected' : '' }}>{{ $kes }}</option>
                         @endforeach
                     </select>
@@ -545,9 +563,9 @@
             </div>
 
             <div class="flex justify-end pt-4 border-t border-slate-100 gap-3">
-                    <a href="{{ route('data-peserta') }}" class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-medium transition">
-                        Batal
-                    </a>
+                <a href="{{ route('data-peserta.index') }}" class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-medium transition">
+                    Batal
+                </a>
                 <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold shadow-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 transition">
                     Simpan Data Registrasi
                 </button>

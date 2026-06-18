@@ -114,7 +114,7 @@
                             Alamat Email
                         </label>
                         <input
-                            type="email"
+                            type="text"
                             name="email"
                             value="{{ old('email') }}"
                             placeholder="nama@sekolah.sch.id"

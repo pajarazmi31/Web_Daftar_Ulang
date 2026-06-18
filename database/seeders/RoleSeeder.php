@@ -20,6 +20,10 @@ class RoleSeeder extends Seeder
             ],
             [
                 'id' => 3,
+                'nama_role' => 'siswa',
+            ],
+            [
+                'id' => 4,
                 'nama_role' => 'kepsek',
             ],
         ]);

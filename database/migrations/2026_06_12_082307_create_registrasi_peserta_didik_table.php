@@ -19,6 +19,11 @@ return new class extends Migration
                 ->constrained('peserta_didik')
                 ->cascadeOnDelete();
 
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->cascadeOnDelete();
+
             $table->string('kompetensi_keahlian')->nullable();
 
             $table->enum('jenis_pendaftaran', [

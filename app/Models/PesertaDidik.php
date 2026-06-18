@@ -20,7 +20,8 @@ class PesertaDidik extends Model
     protected $fillable = [
         'created_by',
         'nomor_pendaftaran',
-        
+        'user_id',
+
         // DATA PRIBADI
         'nama_lengkap',
         'jenis_kelamin',
@@ -104,31 +105,31 @@ class PesertaDidik extends Model
     /**
      * Cast tipe data atribut saat diakses oleh Eloquent.
      */
-protected function casts(): array
-{
-    return [
-        'tanggal_lahir' => 'date',
-        'punya_kip' => 'boolean',
-        'penerima_kip' => 'boolean',
-        
-        // Tambahkan ini agar array otomatis diubah jadi JSON string
-        'berkebutuhan_khusus' => 'array', 
-        'kebutuhan_khusus_ayah' => 'array', // tambahkan jika ini juga berupa checkbox
-        'kebutuhan_khusus_ibu' => 'array',  // tambahkan jika ini juga berupa checkbox
+    protected function casts(): array
+    {
+        return [
+            'tanggal_lahir' => 'date',
+            'punya_kip' => 'boolean',
+            'penerima_kip' => 'boolean',
 
-        'anak_ke' => 'integer',
-        'waktu_tempuh' => 'integer',
-        'jumlah_saudara' => 'integer',
-        'tahun_lahir_ayah' => 'integer',
-        'tahun_lahir_ibu' => 'integer',
-        'tahun_lahir_wali' => 'integer',
-        'tahun_mulai_beasiswa' => 'integer',
-        'tahun_selesai_beasiswa' => 'integer',
-        'tinggi_badan' => 'float',
-        'berat_badan' => 'float',
-        'jarak_kilometer' => 'float',
-    ];
-}
+            // Tambahkan ini agar array otomatis diubah jadi JSON string
+            'berkebutuhan_khusus' => 'array',
+            'kebutuhan_khusus_ayah' => 'array', // tambahkan jika ini juga berupa checkbox
+            'kebutuhan_khusus_ibu' => 'array',  // tambahkan jika ini juga berupa checkbox
+
+            'anak_ke' => 'integer',
+            'waktu_tempuh' => 'integer',
+            'jumlah_saudara' => 'integer',
+            'tahun_lahir_ayah' => 'integer',
+            'tahun_lahir_ibu' => 'integer',
+            'tahun_lahir_wali' => 'integer',
+            'tahun_mulai_beasiswa' => 'integer',
+            'tahun_selesai_beasiswa' => 'integer',
+            'tinggi_badan' => 'float',
+            'berat_badan' => 'float',
+            'jarak_kilometer' => 'float',
+        ];
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -145,5 +146,10 @@ protected function casts(): array
     public function registrasi()
     {
         return $this->hasOne(RegistrasiPesertaDidik::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -12,11 +12,12 @@
     <form action="{{ route('registrasi.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
         @csrf
 
-        @if($errors->any())
-        <div class="p-4 bg-rose-50 border border-rose-100 text-rose-800 rounded-xl text-sm space-y-1">
-            <span class="font-bold">Perbaiki Kesalahan Berikut:</span>
-            <ul class="list-disc list-inside text-xs">
-                @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
             </ul>
         </div>
         @endif

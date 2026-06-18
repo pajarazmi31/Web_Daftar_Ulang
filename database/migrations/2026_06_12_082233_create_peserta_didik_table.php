@@ -19,6 +19,11 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
 
+            $table->foreignId('user_id')
+                  ->nullable()
+                  ->constrained('users')
+                  ->cascadeOnDelete();
+
             $table->string('nomor_pendaftaran')->unique()->nullable();
 
             // DATA PRIBADI

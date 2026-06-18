@@ -6,10 +6,10 @@
 @section('header_subtitle', 'Kelola hak akses dan akun operator atau pimpinan.')
 
 @section('content')
-<div class="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-    <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
+<div class="bg-white rounded-2xl overflow-hidden">
+    <div class="p-6  flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
         <div>
-            <h3 class="font-semibold text-slate-800 text-base">Daftar Pengguna Sistem</h3>
+            <h3 class="text-lg font-bold text-slate-800">Daftar Pengguna Sistem</h3>
             <p class="text-xs text-slate-400 mt-1">Total terdapat {{ count($users ?? []) }} akun terdaftar</p>
         </div>
         <a href="{{ route('manajemen_akun.create') }}" class="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium shadow-sm transition-all duration-150">
@@ -20,6 +20,7 @@
         </a>
     </div>
 
+     <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>

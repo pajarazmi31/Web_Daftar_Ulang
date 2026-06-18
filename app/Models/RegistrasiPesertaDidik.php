@@ -13,6 +13,7 @@ class RegistrasiPesertaDidik extends Model
 
     protected $fillable = [
         'peserta_didik_id',
+        'user_id',
         'kompetensi_keahlian',
         'jenis_pendaftaran',
         'sekolah_asal',
@@ -35,5 +36,12 @@ class RegistrasiPesertaDidik extends Model
     public function pesertaDidik()
     {
         return $this->belongsTo(PesertaDidik::class, 'peserta_didik_id');
+    }
+
+    // Di dalam model RegistrasiPesertaDidik
+    public function user()
+    {
+        // Tambahkan parameter kedua jika nama kolomnya 'id_user' bukan 'user_id'
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

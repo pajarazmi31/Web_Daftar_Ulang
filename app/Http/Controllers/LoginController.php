@@ -21,23 +21,27 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        // 1. Ubah validasi agar menerima input berupa 'login_input' (bisa NISN atau Email)
         $request->validate([
-            'email' => ['required'],
+            'email' => ['required'], // Tetap biarkan namanya 'email' jika name di HTML input Anda adalah name="email"
             'password' => ['required'],
         ]);
 
+        // 2. Karena data NISN siswa disimpan di dalam kolom 'email' pada tabel users,
+        // kita tetap mencocokkan input user ($request->email) ke kolom 'email' di database Laravel.
         $credential = [
-            'email' => $request->email,
+            'email' => $request->email, 
             'password' => $request->password,
         ];
 
         $remember = $request->has('remember');
 
+        // 3. Proses Autentikasi ke Database
         if (!Auth::attempt($credential, $remember)) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'email' => 'Email atau Password salah.'
+                    'email' => 'Email/NISN atau Password yang Anda masukkan salah.'
                 ]);
         }
 
@@ -45,21 +49,28 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
+        // 4. Pengalihan halaman (Redirect) berdasarkan Role setelah berhasil Login
         if ($user->role->nama_role == 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
         if ($user->role->nama_role == 'operator') {
-            return redirect()->route('operator.dashboard');
+            // Jika route dashboard operator Anda menyatu atau berbeda silakan disesuaikan
+            return redirect()->route('operator.dashboard'); 
+        }
+
+        if ($user->role->nama_role == 'siswa') {
+            // Diarahkan ke dashboard khusus siswa yang baru dibuat
+            return redirect()->route('siswa.dashboard');
         }
 
         if ($user->role->nama_role == 'kepsek') {
-            return redirect()->route('kepsek.dashboard');
+            return redirect()->route('laporan.kepsek'); // Sesuaikan dengan nama route kepsek Anda
         }
 
+        // Keamanan tambahan jika role tidak dikenali
         Auth::logout();
-
-        return redirect()->route('login');
+        return redirect()->route('login')->with('error', 'Akses ditolak. Role pengguna tidak sah.');
     }
 
     /**

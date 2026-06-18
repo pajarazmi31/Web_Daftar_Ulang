@@ -10,6 +10,9 @@ use App\Exports\PesertaExport;
 use App\Imports\PesertaImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PesertaTemplateExport;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class PesertaDidikController extends Controller
 {
@@ -40,9 +43,9 @@ class PesertaDidikController extends Controller
     }
 
     public function downloadTemplate()
-{
-    return Excel::download(new PesertaTemplateExport, 'template-import-peserta-didik.xlsx');
-}
+    {
+        return Excel::download(new PesertaTemplateExport, 'template-import-peserta-didik.xlsx');
+    }
 
     public function create()
     {
@@ -85,7 +88,7 @@ class PesertaDidikController extends Controller
             // TAB 2: Data Ayah Kandung
             'nama_ayah'             => 'nullable|string|max:255',
             'nik_ayah'              => 'nullable|string|max:16',
-            'tahun_lahir_ayah'      => 'nullable|integer|digits:4',
+            'tahun_lahir_ayah'      => 'nullable|numeric|between:1900,2030',
             'pendidikan_ayah'       => 'nullable|string|max:255',
             'pekerjaan_ayah'        => 'nullable|string|max:255',
             'penghasilan_ayah'      => 'nullable|string|max:255',
@@ -94,7 +97,7 @@ class PesertaDidikController extends Controller
             // TAB 3: Data Ibu Kandung
             'nama_ibu'              => 'nullable|string|max:255',
             'nik_ibu'               => 'nullable|string|max:16',
-            'tahun_lahir_ibu'       => 'nullable|integer|digits:4',
+            'tahun_lahir_ibu'       => 'nullable|numeric|between:1900,2030',
             'pendidikan_ibu'        => 'nullable|string|max:255',
             'pekerjaan_ibu'         => 'nullable|string|max:255',
             'penghasilan_ibu'       => 'nullable|string|max:255',
@@ -103,7 +106,7 @@ class PesertaDidikController extends Controller
             // TAB 4: Data Wali
             'nama_wali'             => 'nullable|string|max:255',
             'nik_wali'              => 'nullable|string|max:16',
-            'tahun_lahir_wali'      => 'nullable|integer|digits:4',
+            'tahun_lahir_wali'      => 'nullable|numeric|between:1900,2030',
             'pendidikan_wali'       => 'nullable|string|max:255',
             'pekerjaan_wali'        => 'nullable|string|max:255',
             'penghasilan_wali'      => 'nullable|string|max:255',
@@ -122,8 +125,8 @@ class PesertaDidikController extends Controller
             // DATA TAMBAHAN: Beasiswa (Ada di Model $fillable)
             'jenis_beasiswa'         => 'nullable|string|max:255',
             'keterangan_beasiswa'    => 'nullable|string',
-            'tahun_mulai_beasiswa'   => 'nullable|integer|digits:4',
-            'tahun_selesai_beasiswa' => 'nullable|integer|digits:4',
+            'tahun_mulai_beasiswa'   => 'nullable|numeric|between:2000,2050',
+            'tahun_selesai_beasiswa' => 'nullable|numeric|between:2000,2050',
 
             // DATA TAMBAHAN: Kesejahteraan (Ada di Model $fillable)
             'jenis_kesejahteraan'       => 'nullable|string|max:255',
@@ -135,13 +138,40 @@ class PesertaDidikController extends Controller
         $validated['created_by'] = auth()->id();
         $validated['nomor_pendaftaran'] = 'REG-' . date('Ymd') . '-' . strtoupper(Str::random(5));
 
-        // Memastikan nilai Checkbox Boolean bernilai true/false murni
         $validated['punya_kip'] = $request->has('punya_kip');
         $validated['penerima_kip'] = $request->has('penerima_kip');
+        $validated['berkebutuhan_khusus'] = $request->has('berkebutuhan_khusus') ? $request->input('berkebutuhan_khusus') : [];
+        $validated['kebutuhan_khusus_ayah'] = $request->has('kebutuhan_khusus_ayah') ? $request->input('kebutuhan_khusus_ayah') : [];
+        $validated['kebutuhan_khusus_ibu'] = $request->has('kebutuhan_khusus_ibu') ? $request->input('kebutuhan_khusus_ibu') : [];
 
+        // ==================== LOGIKA AUTO CREATE AKUN SISWA ====================
+        $userId = null;
+        if (!empty($request->nisn)) {
+            $roleSiswa = DB::table('role')->where('nama_role', 'siswa')->first();
+            $roleId = $roleSiswa ? $roleSiswa->id : null;
+
+            $existingUser = User::where('email', $request->nisn)->first();
+
+            if (!$existingUser) {
+                $userSiswa = User::create([
+                    'name'     => $request->nama_lengkap,
+                    'email'    => $request->nisn,
+                    'password' => Hash::make('smkn1kawali'),
+                    'role_id'  => $roleId,
+                ]);
+                $userId = $userSiswa->id;
+            } else {
+                $userId = $existingUser->id;
+            }
+        }
+
+        // Isikan user_id ke array $validated sebelum eksekusi create database
+        $validated['user_id'] = $userId;
+
+        // Eksekusi penyimpanan massal
         PesertaDidik::create($validated);
 
-        return redirect()->route('data-peserta')->with('success', 'Data formulir peserta didik baru berhasil disimpan ke sistem.');
+        return redirect()->route('data-peserta.index')->with('success', 'Data pendaftar berhasil disimpan.');
     }
 
     public function show($id)
@@ -196,7 +226,7 @@ class PesertaDidikController extends Controller
             // TAB 2
             'nama_ayah'             => 'nullable|string|max:255',
             'nik_ayah'              => 'nullable|string|max:16',
-            'tahun_lahir_ayah'      => 'nullable|integer|digits:4',
+            'tahun_lahir_ayah' => 'nullable|numeric|between:1900,2030',
             'pendidikan_ayah'       => 'nullable|string|max:255',
             'pekerjaan_ayah'        => 'nullable|string|max:255',
             'penghasilan_ayah'      => 'nullable|string|max:255',
@@ -205,7 +235,7 @@ class PesertaDidikController extends Controller
             // TAB 3
             'nama_ibu'              => 'nullable|string|max:255',
             'nik_ibu'               => 'nullable|string|max:16',
-            'tahun_lahir_ibu'       => 'nullable|integer|digits:4',
+            'tahun_lahir_ibu'  => 'nullable|numeric|between:1900,2030',
             'pendidikan_ibu'        => 'nullable|string|max:255',
             'pekerjaan_ibu'         => 'nullable|string|max:255',
             'penghasilan_ibu'       => 'nullable|string|max:255',
@@ -214,7 +244,7 @@ class PesertaDidikController extends Controller
             // TAB 4
             'nama_wali'             => 'nullable|string|max:255',
             'nik_wali'              => 'nullable|string|max:16',
-            'tahun_lahir_wali'      => 'nullable|integer|digits:4',
+            'tahun_lahir_wali' => 'nullable|numeric|between:1900,2030',
             'pendidikan_wali'       => 'nullable|string|max:255',
             'pekerjaan_wali'        => 'nullable|string|max:255',
             'penghasilan_wali'      => 'nullable|string|max:255',
@@ -233,8 +263,8 @@ class PesertaDidikController extends Controller
             // DATA TAMBAHAN: Beasiswa
             'jenis_beasiswa'         => 'nullable|string|max:255',
             'keterangan_beasiswa'    => 'nullable|string',
-            'tahun_mulai_beasiswa'   => 'nullable|integer|digits:4',
-            'tahun_selesai_beasiswa' => 'nullable|integer|digits:4',
+            'tahun_mulai_beasiswa'   => 'nullable|numeric|between:2000,2050',
+            'tahun_selesai_beasiswa' => 'nullable|numeric|between:2000,2050',
 
             // DATA TAMBAHAN: Kesejahteraan
             'jenis_kesejahteraan'       => 'nullable|string|max:255',
@@ -251,10 +281,13 @@ class PesertaDidikController extends Controller
         $validated['kebutuhan_khusus_ayah'] = $request->has('kebutuhan_khusus_ayah') ? $request->input('kebutuhan_khusus_ayah') : [];
         $validated['kebutuhan_khusus_ibu'] = $request->has('kebutuhan_khusus_ibu') ? $request->input('kebutuhan_khusus_ibu') : [];
 
-        // Melakukan update pada data yang lolos validasi
-        $peserta->update($validated);
+        if ($peserta->update($validated)) {
+            // UBAH BARIS INI: Jangan gunakan redirect()->back()
+            return redirect()->route('data-peserta.index')->with('success', 'Rekam data biodata siswa berhasil diperbarui.');
+        }
 
-        return redirect()->route('data-peserta')->with('success', 'Rekam data biodata siswa berhasil diperbarui.');
+        // Ini sebagai cadangan jika gagal
+        return redirect()->route('data-peserta.index')->with('error', 'Gagal memperbarui data.');
     }
 
     public function destroy($id)
@@ -262,6 +295,6 @@ class PesertaDidikController extends Controller
         $peserta = PesertaDidik::findOrFail($id);
         $peserta->delete();
 
-        return redirect()->route('data-peserta')->with('success', 'Data peserta didik berhasil dihapus secara permanen dari sistem.');
+        return redirect()->route('data-peserta.index')->with('success', 'Data peserta didik berhasil dihapus secara permanen dari sistem.');
     }
 }

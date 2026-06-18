@@ -540,7 +540,7 @@
                     * Tinjau kembali ke-6 tab sebelum melakukan penyimpanan perubahan biodata siswa.
                 </div>
                 <div class="flex gap-3">
-                    <a href="{{ route('data-peserta') }}" class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-medium transition">
+                    <a href="{{ route('data-peserta.index') }}" class="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-medium transition">
                         Batal
                     </a>
                     <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold shadow-md hover:bg-indigo-700 transition">
