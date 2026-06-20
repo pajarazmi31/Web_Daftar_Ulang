@@ -49,7 +49,7 @@
                     </div>
                     <div>
                         <h1 class="font-bold text-sm tracking-wide text-white uppercase">Sidu-Apps</h1>
-                        <p class="text-[11px] text-slate-500 font-medium">Registrasi Peserta Didik</p>
+                        <p class="text-[11px] text-slate-500 font-medium">SMK NEGERI 1 KAWALI</p>
                     </div>
                 </div>
 
@@ -131,15 +131,15 @@
                         </svg>
                         <span class="text-sm">Dashboard</span>
                     </a>
-                    <a href="{{ route('siswa.data-diri') }}"
-                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition group {{ request()->routeIs('siswa.data-diri') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10' : 'hover:bg-slate-800/50 hover:text-white text-slate-400' }}">
+                    <a href="{{ route('siswa.data-diri.index') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition group {{ request()->routeIs('siswa.data-diri.index') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10' : 'hover:bg-slate-800/50 hover:text-white text-slate-400' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span class="text-sm">Data Diri Anda</span>
                     </a>
                     <a href="{{ route('registrasi.siswa') }}"
-                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition group {{ request()->routeIs('siswa.registrasi') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10' : 'hover:bg-slate-800/50 hover:text-white text-slate-400' }}">
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition group {{ request()->routeIs('registrasi.siswa') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10' : 'hover:bg-slate-800/50 hover:text-white text-slate-400' }}">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
@@ -179,7 +179,7 @@
             </div>
 
             <div class="p-4 border-t border-slate-800/60">
-                <div class="text-[10px] text-center text-slate-600 font-medium">Versi Aplikasi 2.0.0</div>
+                <div class="text-[10px] text-center text-slate-600 font-medium">&copy; 2026 TEFA RPL | SMKN 1 Kawali.</div>
             </div>
         </aside>
 

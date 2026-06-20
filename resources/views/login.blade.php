@@ -37,7 +37,7 @@
                     </div>
                     <div>
                         <h1 class="font-bold text-sm tracking-wide text-white uppercase">Sidu-Apps</h1>
-                        <p class="text-[11px] text-slate-500 font-medium">Registrasi Peserta Didik</p>
+                        <p class="text-[11px] text-slate-500 font-medium">SMK NEGERI 1 KAWALI</p>
                     </div>
                 </div>
 
@@ -46,7 +46,7 @@
                         Sistem Daftar Ulang <br><span class="text-indigo-400">Peserta Didik Baru</span>
                     </h2>
                     <p class="text-slate-400 text-xs lg:text-sm leading-relaxed max-w-sm">
-                        Selamat datang di portal administrasi registrasi. Silakan masuk untuk mengelola data penyerahan berkas fisik dan rekam biodata pendaftar sesuai aturan Dapodik.
+                        Selamat datang di portal administrasi daftar ulang peserta didik baru. Silakan masuk untuk mengelola data penyerahan berkas fisik dan rekam biodata pendaftar sesuai aturan Dapodik.
                     </p>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                         Selamat Datang Kembali
                     </h3>
                     <p class="text-slate-400 text-xs sm:text-sm mt-1.5">
-                        Masukkan akun credential Anda untuk mengakses sistem.
+                        Masukkan akun Anda untuk mengakses sistem.
                     </p>
                 </div>
 
@@ -157,7 +157,7 @@
             </div>
 
             <div class="mt-8 text-center text-xs font-semibold text-slate-400/90 tracking-wide">
-                &copy; {{ date('Y') }} SMK Negeri 1 Kawali. All Rights Reserved.
+                &copy; 2026 TEFA RPL | SMK Negeri 1 Kawali.
             </div>
 
         </div>

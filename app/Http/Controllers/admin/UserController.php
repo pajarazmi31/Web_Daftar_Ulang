@@ -11,11 +11,27 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     // READ ALL
-    public function index()
-    {
-        $users = User::with('role')->get();
-        return view('admin.manajemen_akun.index', compact('users'));
-    }
+// Tambahkan Request di argumen fungsi index
+public function index(Request $request)
+{
+    // Mengambil keyword pencarian
+    $search = $request->input('search');
+
+    $users = User::with('role')
+        ->when($search, function ($query, $search) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  // Opsional: cari berdasarkan nama role juga
+                  ->orWhereHas('role', function ($roleQuery) use ($search) {
+                      $roleQuery->where('nama_role', 'like', "%{$search}%");
+                  });
+            });
+        })
+        ->get();
+
+    return view('admin.manajemen_akun.index', compact('users'));
+}
 
     // FORM CREATE
     public function create()

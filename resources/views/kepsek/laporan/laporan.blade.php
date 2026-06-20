@@ -48,14 +48,11 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
                 <thead>
                     <tr class="bg-slate-50/75 text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                         <th class="px-6 py-4 text-center w-12">No</th>
-                        <th class="px-6 py-4">No. Pendaftaran</th>
                         <th class="px-6 py-4">Nama Lengkap</th>
                         <th class="px-6 py-4">Jurusan Pilihan</th>
                         <th class="px-6 py-4">Asal Sekolah</th>
                         <th class="px-6 py-4 text-center">Status</th>
                         <th class="px-6 py-4">NISN / NIK</th>
-                        <th class="px-6 py-4">Jenis Kelamin</th>
-                        <th class="px-6 py-4">No HP Siswa</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -64,9 +61,6 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
                     <tr class="hover:bg-slate-50/50 transition duration-150">
                         <td class="px-6 py-4 text-center font-medium text-slate-400">
                             {{ $laporanData->firstItem() + $key }}
-                        </td>
-                        <td class="px-6 py-4 font-mono text-xs font-semibold text-indigo-600">
-                            {{ $item->nomor_pendaftaran ?? 'Belum Terbit' }}
                         </td>
                         <td class="px-6 py-4 font-semibold text-slate-900">
                             {{ $item->nama_lengkap }}
@@ -90,12 +84,6 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
                         </td>
                         <td class="px-6 py-4 font-mono text-xs text-slate-500">
                             NS: {{ $item->nisn ?? '-' }} <br> NK: {{ $item->nik }}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{ $item->jenis_kelamin }}
-                        </td>
-                        <td class="px-6 py-4 text-slate-500">
-                            {{ $item->no_hp ?? '-' }}
                         </td>
                         <td class="px-6 py-4 text-center">
                             <a href="{{ route('laporan.kepsek.detail', $item->id) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition inline-block" title="Lihat Detail Lengkap">

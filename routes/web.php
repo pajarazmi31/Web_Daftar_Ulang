@@ -92,7 +92,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/siswa', [SiswaController::class, 'index'])->name('siswa.dashboard');
         
         // Route untuk mengelola data diri mandiri
-        Route::get('/data-diri', [SiswaController::class, 'dataDiri'])->name('siswa.data-diri');
+        Route::get('/data-diri', [SiswaController::class, 'dataDiri'])->name('siswa.data-diri.index');
+        Route::get('/data-diri/Edit', [SiswaController::class, 'editDataDiri'])->name('siswa.data-diri.edit');
         Route::put('/data-diri/update', [SiswaController::class, 'updateDataDiri'])->name('data-diri.update');
 
         // Route untuk registrasi mandiri

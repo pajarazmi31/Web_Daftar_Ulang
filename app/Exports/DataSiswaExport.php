@@ -7,93 +7,68 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Illuminate\Http\Request;
 
-class DataSiswaExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class DataSiswaExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize
 {
-    protected $kompetensiKeahlian;
+    protected $jurusan;
+    protected $rowNumber = 0;
 
-    // Menerima filter kompetensi keahlian dari controller
-    public function __construct($kompetensiKeahlian = null)
+    // 1. Tangkap lemparan filter jurusan dari Controller
+    public function __construct($jurusan = null)
     {
-        $this->kompetensiKeahlian = $kompetensiKeahlian;
+        $this->jurusan = $jurusan;
     }
 
+    // 2. Jalankan Query terfilter berdasarkan Jurusan
     public function query()
     {
-        // Join tabel peserta_didik dengan registrasi_peserta_didik
         $query = PesertaDidik::query()
             ->join('registrasi_peserta_didik', 'peserta_didik.id', '=', 'registrasi_peserta_didik.peserta_didik_id')
-            ->select('peserta_didik.*', 'registrasi_peserta_didik.kompetensi_keahlian', 'registrasi_peserta_didik.jenis_pendaftaran', 'registrasi_peserta_didik.sekolah_asal', 'registrasi_peserta_didik.status_registrasi');
+            ->select(
+                'peserta_didik.nama_lengkap',
+                'peserta_didik.nisn',
+                'peserta_didik.nik',
+                'registrasi_peserta_didik.kompetensi_keahlian',
+                'registrasi_peserta_didik.sekolah_asal',
+                'registrasi_peserta_didik.status_registrasi'
+            );
 
-        // Terapkan filter jika dipilih
-        if ($this->kompetensiKeahlian) {
-            $query->where('registrasi_peserta_didik.kompetensi_keahlian', $this->kompetensiKeahlian);
+        // Jika filter jurusan dipilih, saring datanya
+        if ($this->jurusan) {
+            $query->where('registrasi_peserta_didik.kompetensi_keahlian', $this->jurusan);
         }
 
-        return $query;
+        return $query->latest('peserta_didik.created_at');
     }
 
-    // Menentukan Header Kolom Excel
+    // 3. Tentukan Judul Header Kolom di Excel
     public function headings(): array
     {
         return [
-            'Nomor Pendaftaran',
+            'No',
             'Nama Lengkap',
-            'Jenis Kelamin',
             'NISN',
             'NIK',
-            'Kompetensi Keahlian (Jurusan)',
-            'Sekolah Asal',
-            'Jenis Pendaftaran',
-            'Status Registrasi',
-            'Agama',
-            'Tempat, Tanggal Lahir',
-            'Alamat Lengkap',
-            'No. HP Siswa',
-            'No. HP Ortu',
-            'Email',
-            'KIP Punya/Penerima',
-            'Jenis Beasiswa'
+            'Jurusan / Kompetensi Keahlian',
+            'Asal Sekolah',
+            'Status Registrasi'
         ];
     }
 
-    // Memetakan data model ke dalam kolom Excel
+    // 4. Petakan (Mapping) data agar masuk ke kolom yang tepat
     public function map($row): array
     {
-        return [
-            $row->nomor_pendaftaran ?? '-',
-            $row->nama_lengkap,
-            $row->jenis_kelamin,
-            $row->nisn ?? '-',
-            "'" . $row->nik, // Menambahkan kutip satu agar NIK dianggap string dan tidak pecah di Excel
-            $row->kompetensi_keahlian ?? 'Belum Memilih',
-            $row->sekolah_asal ?? '-',
-            $row->jenis_pendaftaran,
-            $row->status_registrasi,
-            $row->agama,
-            $row->tempat_lahir . ', ' . \Carbon\Carbon::parse($row->tanggal_lahir)->format('d-m-Y'),
-            $row->alamat . " RT: $row->rt / RW: $row->rw, Desa: $row->desa_kelurahan, Kec: $row->kecamatan",
-            $row->no_hp ?? '-',
-            $row->no_hp_ortu ?? '-',
-            $row->email ?? '-',
-            ($row->punya_kip ? 'Punya' : 'Tidak') . ' / ' . ($row->penerima_kip ? 'Menerima' : 'Tidak'),
-            $row->jenis_beasiswa ?? 'Tidak Ada',
-        ];
-    }
+        $this->rowNumber++;
 
-    // Styling Header agar terlihat profesional
-    public function styles(Worksheet $sheet)
-    {
         return [
-            1 => [
-                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'startColor' => ['rgb' => '1E293B'] // Slate 800 (Warna gelap elegan)
-                ]
-            ],
+            $this->rowNumber,
+            $row->nama_lengkap,
+            "'" . $row->nisn, // Menambahkan kutip tunggal (') agar angka NISN tidak hancur/berubah format di Excel
+            "'" . $row->nik,  // Menambahkan kutip tunggal (') agar angka NIK tidak terpotong (Scientific Notation)
+            $row->kompetensi_keahlian ?? '-',
+            $row->sekolah_asal ?? '-',
+            $row->status_registrasi ?? '-'
         ];
     }
 }

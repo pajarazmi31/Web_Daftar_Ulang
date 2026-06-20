@@ -18,7 +18,7 @@
             </div>
             <div class="p-3 rounded-xl bg-sky-50 text-sky-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
             </div>
         </div>
@@ -34,8 +34,8 @@
             </div>
             <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                 </svg>
             </div>
         </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="p-3 rounded-xl bg-emerald-50 text-emerald-600">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
         </div>
@@ -77,6 +77,7 @@
                         <th class="px-6 py-3.5 font-medium w-16 text-center">No</th>
                         <th class="px-6 py-3.5 font-medium">NISN</th>
                         <th class="px-6 py-3.5 font-medium">Nama Lengkap</th>
+                        <th class="px-6 py-3.5 font-medium">Status Registrasi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
@@ -90,6 +91,9 @@
                         </td>
                         <td class="px-6 py-4 font-medium text-slate-800">
                             {{ $item->nama_lengkap }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-800">
+                            {{ $item->registrasi?->status_registrasi ?? 'Belum Registrasi' }}
                         </td>
                     </tr>
                     @empty
@@ -114,25 +118,31 @@
             <h3 class="font-semibold text-slate-800 tracking-wide text-base mb-4">
                 Akses Pintas
             </h3>
-            
+
             <div class="space-y-2.5">
                 <a href="{{ route('manajemen_akun') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-sky-100 hover:bg-sky-50/40 transition-all duration-150">
                     <span class="text-sm font-medium text-slate-700 group-hover:text-sky-700">Manajemen Akun</span>
-                    <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
                 </a>
 
                 <a href="{{ route('data-peserta.index') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-indigo-100 hover:bg-indigo-50/40 transition-all duration-150">
                     <span class="text-sm font-medium text-slate-700 group-hover:text-indigo-500">Data Peserta Didik</span>
-                    <svg class="w-4 h-4 text-slate-400 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-4 h-4 text-slate-400 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
                 </a>
 
                 <a href="{{ route('registrasi.index') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-emerald-100 hover:bg-emerald-50/40 transition-all duration-150">
                     <span class="text-sm font-medium text-slate-700 group-hover:text-emerald-500">Registrasi Peserta</span>
-                    <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
                 </a>
             </div>
         </div>
-        
+
         <div class="mt-6 pt-4 border-t border-slate-100 text-center">
             <span class="text-xs text-slate-400">Punya kendala teknis? Hubungi bantuan.</span>
         </div>

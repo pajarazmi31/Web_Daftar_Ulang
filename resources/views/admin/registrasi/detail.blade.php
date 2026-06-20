@@ -26,12 +26,10 @@
             <div>
                 @if($registrasi->status_registrasi == 'Diterima')
                 <span class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold shadow-sm shadow-emerald-100/50">Diterima</span>
-                @elseif($registrasi->status_registrasi == 'Menunggu Verifikasi')
-                <span class="px-3 py-1.5 bg-amber-100 text-amber-800 rounded-full text-xs font-bold shadow-sm shadow-amber-100/50">Menunggu Verifikasi</span>
                 @elseif($registrasi->status_registrasi == 'Ditolak')
                 <span class="px-3 py-1.5 bg-rose-100 text-rose-800 rounded-full text-xs font-bold shadow-sm shadow-rose-100/50">Ditolak</span>
                 @else
-                <span class="px-3 py-1.5 bg-slate-200 text-slate-700 rounded-full text-xs font-bold">Draft</span>
+                <span class="px-3 py-1.5 bg-amber-100 text-amber-800 rounded-full text-xs font-bold shadow-sm shadow-amber-100/50">Menunggu Verifikasi</span>
                 @endif
             </div>
         </div>

@@ -7,51 +7,74 @@
 
 @section('content')
 
-<div class="bg-white p-4 rounded-2xl border border-slate-100 mb-6 flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 shadow-sm">
-    
-    <div class="relative flex-1 max-w-md">
+<div class="bg-white p-4 rounded-2xl border border-slate-100 mb-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 shadow-sm">
+    <form action="{{ url()->current() }}" method="GET" class="relative flex-1 max-w-md flex items-center">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
         </span>
-        <input type="text" placeholder="Cari nama atau NISN..." class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Cari nama atau NISN..."
+            class="w-full pl-10 pr-24 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all text-slate-700">
+
+        <div class="absolute inset-y-0 right-0 flex items-center pr-4 gap-2">
+            @if(request('search'))
+            <a href="{{ url()->current() }}" class="text-xs text-slate-400 hover:text-slate-600 font-medium transition-colors px-1">
+                Reset
+            </a>
+            <span class="h-4 w-px bg-slate-200"></span>
+            @endif
+            <button class="text-xs text-slate-400 hover:text-slate-600 font-medium transition-colors">Cari</button>
+        </div>
+    </form>
+
+    <a href="{{ route('data-peserta.create') }}" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium shadow-sm transition-all duration-150 whitespace-nowrap">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7-7H5" />
+        </svg>
+        Tambah Peserta
+    </a>
+</div>
+
+<div class="bg-white p-4 rounded-2xl border border-slate-100 mb-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 shadow-sm">
+    <div class="flex items-center gap-2 text-slate-500">
+        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18V6A2.25 2.25 0 015.25 3.75h9m4.5 3.75H15" />
+        </svg>
+        <span class="text-xs font-medium uppercase tracking-wider">Kelola Dokumen Excel</span>
     </div>
 
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 justify-end">
-        
-        <form action="{{ route('data-peserta.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-1.5 rounded-xl w-full sm:w-auto">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <form action="{{ route('data-peserta.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 bg-white border border-slate-200 p-1.5 rounded-xl w-full sm:w-auto shadow-sm">
             @csrf
-            <input type="file" name="file_excel" required class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer w-full sm:w-44">
-            <button type="submit" class="text-xs bg-slate-800 text-white px-3 py-1.5 rounded-lg hover:bg-slate-900 transition font-medium whitespace-nowrap shadow-sm">
+            <input type="file" name="file_excel" required class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer w-full sm:w-40">
+            <button type="submit" class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition font-medium whitespace-nowrap shadow-sm">
                 Import
             </button>
         </form>
 
-        <a href="{{ route('data-peserta.template') }}" class="text-sm font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 hover:bg-indigo-100 px-4 py-2 rounded-xl transition inline-flex items-center justify-center gap-2" title="Unduh template Excel kosong">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a href="{{ route('data-peserta.template') }}" class="text-xs font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 px-3 py-2 rounded-xl transition inline-flex items-center justify-center gap-2 shadow-sm" title="Unduh template Excel kosong">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-13.5h3.75a1.125 1.125 0 011.125 1.125v16.5a1.125 1.125 0 01-1.125 1.125H5.25a1.125 1.125 0 01-1.125-1.125V3.75A1.125 1.125 0 015.25 2.25h3.75" />
             </svg>
-            <span class="sm:inline">Template</span>
+            <span>Unduh Template</span>
         </a>
 
-        <a href="{{ route('data-peserta.export') }}" class="text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 px-4 py-2 rounded-xl transition inline-flex items-center justify-center gap-2">
-            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a href="{{ route('data-peserta.export') }}" class="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 px-3 py-2 rounded-xl transition inline-flex items-center justify-center gap-2 shadow-sm">
+            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
-            <span>Export</span>
-        </a>
-        
-        <div class="hidden sm:block h-6 w-px bg-slate-200 mx-1"></div>
-
-        <a href="{{ route('data-peserta.create') }}" class="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium shadow-sm transition-all duration-150 whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7-7H5" />
-            </svg>
-            Tambah Peserta
+            <span>Export Excel</span>
         </a>
     </div>
 </div>
+
+<div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
 
 <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
     <div class="overflow-x-auto">

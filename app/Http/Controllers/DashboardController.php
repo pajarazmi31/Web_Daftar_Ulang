@@ -20,9 +20,10 @@ class DashboardController extends Controller
             $query->where('nama_role', 'operator');
         })->count();
 
-        $pesertaTerbaru = PesertaDidik::latest()
-            ->take(5)
-            ->get();
+$pesertaTerbaru = PesertaDidik::with('registrasi')
+        ->latest()
+        ->take(5)
+        ->get();
 
         return view('admin.dashboard', compact(
             'user',

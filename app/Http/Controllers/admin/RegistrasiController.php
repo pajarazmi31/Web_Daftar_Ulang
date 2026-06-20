@@ -10,11 +10,48 @@ use Illuminate\Support\Facades\Storage;
 
 class RegistrasiController extends Controller
 {
-    public function index()
-    {
-        $registrasi = RegistrasiPesertaDidik::with('pesertaDidik')->latest()->get();
-        return view('admin.registrasi.index', compact('registrasi'));
-    }
+public function index(Request $request)
+{
+    // 1. Ambil input pencarian dan filter
+    $search  = $request->input('search');
+    $jurusan = $request->input('jurusan');
+    $status  = $request->input('status');
+
+    // 2. Query Utama dengan Eager Loading + Filter Dinamis
+    $registrasis = RegistrasiPesertaDidik::with('pesertaDidik')
+        // Filter Pencarian (Nama, NISN, Sekolah Asal)
+        ->when($search, function ($query, $search) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('sekolah_asal', 'like', "%{$search}%")
+                  ->orWhereHas('pesertaDidik', function ($pesertaQuery) use ($search) {
+                      $pesertaQuery->where('nama_lengkap', 'like', "%{$search}%")
+                                   ->orWhere('nisn', 'like', "%{$search}%");
+                  });
+            });
+        })
+        // Filter Jurusan / Kompetensi Keahlian
+        ->when($jurusan, function ($query, $jurusan) {
+            return $query->where('kompetensi_keahlian', $jurusan);
+        })
+        // Filter Status Registrasi
+        ->when($status, function ($query, $status) {
+            return $query->where('status_registrasi', $status);
+        })
+        ->latest()
+        ->get();
+
+    // 3. Hitung data untuk Card Statistik di paling atas
+    $countPending   = RegistrasiPesertaDidik::where('status_registrasi', 'Menunggu Verifikasi')->count();
+    $countDisetujui = RegistrasiPesertaDidik::where('status_registrasi', 'Diterima')->count();
+    $countDitolak   = RegistrasiPesertaDidik::where('status_registrasi', 'Ditolak')->count();
+
+    return view('admin.registrasi.index', compact(
+        'registrasis',
+        'countPending',
+        'countDisetujui',
+        'countDitolak'
+    ));
+}
 
     public function create()
     {
@@ -37,7 +74,7 @@ class RegistrasiController extends Controller
             'pernah_paud'                  => 'required|in:Ya,Tidak',
             'hobi'                         => 'nullable|string|max:255',
             'cita_cita'                    => 'nullable|string|max:255',
-            'status_registrasi'            => 'required|in:Draft,Menunggu Verifikasi,Diterima,Ditolak',
+            'status_registrasi'            => 'required|in:Menunggu Verifikasi,Diterima,Ditolak',
             'kk'                           => $fileRule,
             'ktp_ortu'                     => $fileRule,
             'akta_kelahiran'               => $fileRule,
@@ -66,12 +103,12 @@ class RegistrasiController extends Controller
     }
 
     public function show($id)
-{
-    // Mengambil data registrasi berserta relasi pesertaDidik-nya
-    $registrasi = RegistrasiPesertaDidik::with('pesertaDidik')->findOrFail($id);
-    
-    return view('admin.registrasi.detail', compact('registrasi'));
-}
+    {
+        // Mengambil data registrasi berserta relasi pesertaDidik-nya
+        $registrasi = RegistrasiPesertaDidik::with('pesertaDidik')->findOrFail($id);
+
+        return view('admin.registrasi.detail', compact('registrasi'));
+    }
 
     public function edit($id)
     {
@@ -105,7 +142,7 @@ class RegistrasiController extends Controller
     public function destroy($id)
     {
         $registrasi = RegistrasiPesertaDidik::findOrFail($id);
-        
+
         // Hapus fisik berkas berkas yang melekat pada database sebelum record dihapus
         $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan', 'sptjm', 'surat_pernyataan_tata_tertib'];
         foreach ($fileFields as $field) {

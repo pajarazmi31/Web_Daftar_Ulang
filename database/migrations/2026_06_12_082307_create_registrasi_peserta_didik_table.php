@@ -43,11 +43,10 @@ return new class extends Migration
             $table->string('cita_cita')->nullable();
 
             $table->enum('status_registrasi', [
-                'Draft',
                 'Menunggu Verifikasi',
                 'Diterima',
                 'Ditolak'
-            ])->default('Draft');
+            ])->default('Menunggu Verifikasi');
 
             $table->string('kk')->nullable();
 

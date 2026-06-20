@@ -3,7 +3,7 @@
 @section('title', 'Dashboard Kepala Sekolah')
 
 @section('header_title')
-Laporan Eksekutif Daftar Ulang
+Laporan Executive Daftar Ulang
 @endsection
 
 @section('header_subtitle')
@@ -34,21 +34,22 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
             </div>
         </div>
 
-    <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-        <div class="flex justify-between items-start">
-            <div>
-                <p class="text-slate-400 text-sm font-medium tracking-wide">Total Registrasi</p>
-                <h3 class="text-3xl font-bold tracking-tight text-amber-600 mt-2">
-                    {{ $totalRegistrasi ?? 0 }}
-                </h3>
-            </div>
-            <div class="p-3 rounded-xl bg-amber-50 text-amber-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
+        <!-- Total Registrasi -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium tracking-wide">Total Registrasi</p>
+                    <h3 class="text-3xl font-bold tracking-tight text-amber-600 mt-2">
+                        {{ $totalRegistrasi ?? 0 }}
+                    </h3>
+                </div>
+                <div class="p-3 rounded-xl bg-amber-50 text-amber-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- 2. DIAGRAM UTAMA & LAPORAN JURUSAN -->
@@ -61,9 +62,12 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
                     <h3 class="text-base font-semibold text-slate-900 tracking-tight">Keterisian Kompetensi Keahlian</h3>
                     <p class="text-xs text-slate-400 mt-0.5">Jumlah siswa yang telah diterima berdasarkan rincian jurusan.</p>
                 </div>
-                <!-- Tombol Cetak Laporan Cepat -->
-                <button onclick="window.print()" class="text-xs font-semibold bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition flex items-center space-x-1">
-                    <span>🖨️</span> <span>Cetak Laporan</span>
+                <!-- Tombol Cetak Laporan Cepat (Mengganti Emoji Printer) -->
+                <button class="text-xs font-semibold bg-white border border-slate-200 text-slate-700 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition flex items-center gap-1.5 shadow-sm">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096a42.42 42.42 0 01-10.56 0m10.56 0L17.66 18m0 0a2.25 2.25 0 002.25-2.25v-1.318a3.75 3.75 0 00-2.25-3.436M17.66 18a2.25 2.25 0 01-2.25 2.25H8.59a2.25 2.25 0 01-2.25-2.25M17.66 18.543A3.33 3.33 0 0115.41 20H8.59c-.83 0-1.605-.305-2.2-.816m13.72-6.013A3.747 3.747 0 0012 9a3.747 3.747 0 00-6.11 3.171m12.22 0c.229.215.353.516.353.832v1.319c0 .416-.215.803-.561 1.026M5.89 13.171a3.747 3.747 0 00-3.39 3.437v1.318a2.25 2.25 0 002.25 2.25m0 0a2.25 2.25 0 002.25-2.25v-1.319c0-.316.124-.617.353-.832m1.11-4.171a41.077 41.077 0 0110.56 0M10.5 7.5h3" />
+                    </svg>
+                    <span>Cetak Laporan</span>
                 </button>
             </div>
 
@@ -76,7 +80,6 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
                     </div>
                     <!-- Progress Bar Minimalis -->
                     <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        {{-- Contoh logic dinamis persentase jika ada target kuota, misal target maksimal 100 siswa per jurusan --}}
                         @php $persen = min(($jurusan->total / 100) * 100, 100); @endphp
                         <div class="bg-slate-900 h-full rounded-full transition-all duration-500" style="width: {{ $persen }}%"></div>
                     </div>
@@ -97,19 +100,27 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
                 <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Proporsi Gender Terdata</h3>
                 
                 <div class="space-y-4">
-                    <!-- Laki-laki -->
+                    <!-- Laki-laki (Mengganti Emoji Topi Toga Laki-laki) -->
                     <div class="flex items-center justify-between p-3 bg-blue-50/50 rounded-xl">
                         <div class="flex items-center space-x-3 text-sm">
-                            <span class="text-lg">👨‍🎓</span>
+                            <div class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.263 15.918a9 9 0 0015.474 0M12 12a3 3 0 100-6 3 3 0 000 6zm0 0v6m-3-3h6" />
+                                </svg>
+                            </div>
                             <span class="font-medium text-slate-700">Laki-laki</span>
                         </div>
                         <span class="text-sm font-semibold text-blue-700">{{ $pria ?? 0 }} <span class="text-xs text-slate-400 font-normal">Siswa</span></span>
                     </div>
 
-                    <!-- Perempuan -->
+                    <!-- Perempuan (Mengganti Emoji Topi Toga Perempuan) -->
                     <div class="flex items-center justify-between p-3 bg-rose-50/50 rounded-xl">
                         <div class="flex items-center space-x-3 text-sm">
-                            <span class="text-lg">👩‍🎓</span>
+                            <div class="p-1.5 rounded-lg bg-rose-50 text-rose-600">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a3 3 0 100-6 3 3 0 000 6zm0 0v6m-3-2h6m-6-2h6" />
+                                </svg>
+                            </div>
                             <span class="font-medium text-slate-700">Perempuan</span>
                         </div>
                         <span class="text-sm font-semibold text-rose-700">{{ $wanita ?? 0 }} <span class="text-xs text-slate-400 font-normal">Siswa</span></span>
@@ -120,49 +131,54 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
         </div>
 
     </div>
-    <!-- TAMBAHKAN BARIS BARU INI DI BAWAH GRID UTAMA DASHBOARD KEPALA SEKOLAH -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
 
-    <!-- Komponen 1: Analisis Kebutuhan Bantuan (KIP & Beasiswa) -->
-    <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
-        <h3 class="text-base font-semibold text-slate-900 tracking-tight mb-4">Analisis Profil Afirmasi & Beasiswa</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="p-4 bg-slate-50 rounded-xl">
-                <span class="text-xs text-slate-400 block mb-1">Punya KIP (Belum Dapat Bantuan)</span>
-                <!-- Menerapkan pengecekan field punya_kip & penerima_kip dari migration -->
-                <span class="text-2xl font-semibold text-slate-800">{{ $punyaKipBelumMenerima ?? 0 }}</span>
-                <span class="text-xs text-slate-400 block mt-1">Perlu diusulkan ke PIP</span>
-            </div>
-            <div class="p-4 bg-slate-50 rounded-xl">
-                <span class="text-xs text-slate-400 block mb-1">Siswa Jalur Prestasi / Beasiswa</span>
-                <span class="text-2xl font-semibold text-indigo-600">{{ $totalBeasiswa ?? 0 }}</span>
-                <span class="text-xs text-slate-400 block mt-1">Siswa berprestasi terdata</span>
-            </div>
-        </div>
-    </div>
+    <!-- 3. ANALISIS TAMBAHAN -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
 
-    <!-- Komponen 2: Top Asal Sekolah (Feeder) -->
-    <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
-        <h3 class="text-base font-semibold text-slate-900 tracking-tight mb-2">Top 3 Asal Sekolah Terbanyak</h3>
-        <p class="text-xs text-slate-400 mb-4">Sekolah asal yang paling banyak menyumbang calon peserta didik.</p>
-        
-        <div class="space-y-3">
-            @forelse($topSekolahAsal ?? [] as $sekolah)
-            <div class="flex justify-between items-center p-2.5 hover:bg-slate-50 rounded-xl transition">
-                <div class="flex items-center space-x-3 text-sm">
-                    <span class="text-slate-400 font-medium">🏫</span>
-                    <span class="font-medium text-slate-700">{{ $sekolah->sekolah_asal ?? 'Tidak Diketahui' }}</span>
+        <!-- Komponen 1: Analisis Kebutuhan Bantuan (KIP & Beasiswa) -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+            <h3 class="text-base font-semibold text-slate-900 tracking-tight mb-4">Analisis Profil Afirmasi & Beasiswa</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 bg-slate-50 rounded-xl">
+                    <span class="text-xs text-slate-400 block mb-1">Punya KIP (Belum Dapat Bantuan)</span>
+                    <span class="text-2xl font-semibold text-slate-800">{{ $punyaKipBelumMenerima ?? 0 }}</span>
+                    <span class="text-xs text-slate-400 block mt-1">Perlu diusulkan ke PIP</span>
                 </div>
-                <span class="text-xs bg-slate-100 px-2.5 py-1 rounded-full font-semibold text-slate-600">
-                    {{ $sekolah->total }} Siswa
-                </span>
+                <div class="p-4 bg-slate-50 rounded-xl">
+                    <span class="text-xs text-slate-400 block mb-1">Siswa Jalur Prestasi / Beasiswa</span>
+                    <span class="text-2xl font-semibold text-indigo-600">{{ $totalBeasiswa ?? 0 }}</span>
+                    <span class="text-xs text-slate-400 block mt-1">Siswa berprestasi terdata</span>
+                </div>
             </div>
-            @empty
-            <p class="text-xs text-slate-400 italic py-4 text-center">Belum ada rincian data sekolah asal.</p>
-            @endforelse
         </div>
-    </div>
 
-</div> 
+        <!-- Komponen 2: Top Asal Sekolah (Feeder) -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
+            <h3 class="text-base font-semibold text-slate-900 tracking-tight mb-2">Top 3 Asal Sekolah Terbanyak</h3>
+            <p class="text-xs text-slate-400 mb-4">Sekolah asal yang paling banyak menyumbang calon peserta didik.</p>
+            
+            <div class="space-y-3">
+                @forelse($topSekolahAsal ?? [] as $sekolah)
+                <div class="flex justify-between items-center p-2.5 hover:bg-slate-50 rounded-xl transition">
+                    <div class="flex items-center space-x-3 text-sm">
+                        <!-- Mengganti Emoji Gedung Sekolah Tradisional -->
+                        <div class="text-slate-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                            </svg>
+                        </div>
+                        <span class="font-medium text-slate-700">{{ $sekolah->sekolah_asal ?? 'Tidak Diketahui' }}</span>
+                    </div>
+                    <span class="text-xs bg-slate-100 px-2.5 py-1 rounded-full font-semibold text-slate-600">
+                        {{ $sekolah->total }} Siswa
+                    </span>
+                </div>
+                @empty
+                <p class="text-xs text-slate-400 italic py-4 text-center">Belum ada rincian data sekolah asal.</p>
+                @endforelse
+            </div>
+        </div>
+
+    </div> 
 </div>
 @endsection

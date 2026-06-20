@@ -16,10 +16,24 @@ use Illuminate\Support\Facades\Hash;
 
 class PesertaDidikController extends Controller
 {
-    public function index()
+public function index(Request $request)
     {
+        // Tangkap input keyword pencarian
+        $search = $request->input('search');
+
         // Menggunakan latest() untuk menampilkan data pendaftar terbaru di atas
-        $peserta = PesertaDidik::with('creator')->latest()->get();
+        $peserta = PesertaDidik::with('creator')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('nama_lengkap', 'like', "%{$search}%")
+                      ->orWhere('nisn', 'like', "%{$search}%")
+                      ->orWhere('nomor_pendaftaran', 'like', "%{$search}%"); 
+                      // Opsional: Ditambahkan nomor_pendaftaran jika ingin dicari juga
+                });
+            })
+            ->latest()
+            ->get();
+
         return view('admin.data_peserta.index', compact('peserta'));
     }
 

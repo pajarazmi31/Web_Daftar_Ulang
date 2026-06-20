@@ -85,7 +85,7 @@
                 <div class="space-y-2.5 border-t border-slate-50 pt-4">
                     <div class="flex justify-between text-xs">
                         <span class="text-slate-400 font-medium">Nama Lengkap</span>
-                        <span class="font-semibold text-slate-700">{{ $peserta->nama ?? 'Belum Melakukan Registrasi' }}</span>
+                        <span class="font-semibold text-slate-700">{{ $peserta->nama_lengkap ?? 'Belum Melakukan Registrasi' }}</span>
                     </div>
                     <div class="flex justify-between text-xs">
                         <span class="text-slate-400 font-medium">NISN</span>
@@ -99,7 +99,7 @@
             </div>
 
             <div class="pt-6 border-t border-slate-50 mt-4">
-                <a href="{{ route('siswa.data-diri') }}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100/80 text-slate-700 text-xs font-semibold rounded-xl transition border border-slate-100">
+                <a href="{{ route('siswa.data-diri.index') }}" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100/80 text-slate-700 text-xs font-semibold rounded-xl transition border border-slate-100">
                     <span>Lihat & Edit Detail Data</span>
                     <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />

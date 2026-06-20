@@ -84,7 +84,7 @@
             <div>
                 <label class="block text-indigo-600 font-bold mb-1 text-sm">Penetapan Status Registrasi Akhir *</label>
                 <select name="status_registrasi" required class="w-full px-4 py-2 border border-indigo-300 rounded-xl bg-indigo-50/50 font-semibold text-sm">
-                    @foreach(['Draft', 'Menunggu Verifikasi', 'Diterima', 'Ditolak'] as $status)
+                    @foreach(['Menunggu Verifikasi', 'Diterima', 'Ditolak'] as $status)
                     <option value="{{ $status }}" {{ old('status_registrasi', $registrasi->status_registrasi) == $status ? 'selected' : '' }}>{{ $status }}</option>
                     @endforeach
                 </select>

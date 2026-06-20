@@ -12,7 +12,7 @@
                 <svg class="w-5 h-5 text-indigo-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span class="font-medium">Anda sudah melakukan registrasi. Silakan tunggu konfirmasi atau cek berkala data Anda.</span>
+                <span class="font-medium">Anda sudah melakukan registrasi.</span>
             </div>
         </div>
     @else
@@ -40,7 +40,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
                         <label class="block text-slate-600 font-medium mb-1">1. Kompetensi Keahlian Jurusan *</label>
-                        <select name="kompetensi_keahlian" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
+                        <select name="kompetensi_keahlian"  class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
                             <option value="">-- Pilih Kompetensi Keahlian --</option>
                             @foreach([
                             'Teknik Otomotif',
@@ -60,7 +60,7 @@
 
                     <div>
                         <label class="block text-slate-600 font-medium mb-1">2. Jalur Pendaftaran *</label>
-                        <select name="jalur_pendaftaran" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
+                        <select name="jalur_pendaftaran"  class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
                             <option value="">-- Pilih Jalur --</option>
                             <option value="Zonasi" {{ old('jalur_pendaftaran') == 'Zonasi' ? 'selected' : '' }}>Zonasi</option>
                             <option value="Afirmasi" {{ old('jalur_pendaftaran') == 'Afirmasi' ? 'selected' : '' }}>Afirmasi</option>
@@ -70,7 +70,7 @@
 
                     <div>
                         <label class="block text-slate-600 font-medium mb-1">3. Jenis Pendaftaran *</label>
-                        <select name="jenis_pendaftaran" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
+                        <select name="jenis_pendaftaran"  class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
                             @foreach(['Siswa Baru', 'Pindahan', 'Kembali Bersekolah'] as $item)
                             <option value="{{ $item }}" {{ old('jenis_pendaftaran') == $item ? 'selected' : '' }}>{{ $item }}</option>
                             @endforeach
@@ -84,7 +84,7 @@
 
                     <div>
                         <label class="block text-slate-600 font-medium mb-1">5. Pernah PAUD? *</label>
-                        <select name="pernah_paud" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
+                        <select name="pernah_paud" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
                             <option value="Tidak" {{ old('pernah_paud') == 'Tidak' ? 'selected' : '' }}>Tidak</option>
                             <option value="Ya" {{ old('pernah_paud') == 'Ya' ? 'selected' : '' }}>Ya</option>
                         </select>
@@ -107,19 +107,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                         <div>
                             <label class="block text-slate-600 font-medium mb-1">Upload Kartu Keluarga (KK) *</label>
-                            <input type="file" name="kk" required class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
+                            <input type="file" name="kk" class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
                         </div>
                         <div>
                             <label class="block text-slate-600 font-medium mb-1">Upload KTP Orang Tua *</label>
-                            <input type="file" name="ktp_ortu" required class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
+                            <input type="file" name="ktp_ortu" class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
                         </div>
                         <div>
                             <label class="block text-slate-600 font-medium mb-1">Upload Akta Kelahiran *</label>
-                            <input type="file" name="akta_kelahiran" required class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
+                            <input type="file" name="akta_kelahiran" class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
                         </div>
                         <div>
                             <label class="block text-slate-600 font-medium mb-1">Upload Surat Keterangan Lulus (SKL) *</label>
-                            <input type="file" name="surat_keterangan_lulus" required class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
+                            <input type="file" name="surat_keterangan_lulus" class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
                         </div>
                         <div>
                             <label class="block text-slate-600 font-medium mb-1">Upload Kartu Kesejahteraan (KKS/KPS jika ada)</label>
@@ -127,11 +127,11 @@
                         </div>
                         <div>
                             <label class="block text-slate-600 font-medium mb-1">Upload SPTJM Berkas *</label>
-                            <input type="file" name="sptjm" required class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
+                            <input type="file" name="sptjm" class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-slate-600 font-medium mb-1">Upload Surat Pernyataan Tata Tertib Sekolah *</label>
-                            <input type="file" name="surat_pernyataan_tata_tertib" required class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
+                            <input type="file" name="surat_pernyataan_tata_tertib" class="w-full p-1.5 border border-slate-200 rounded-lg bg-white">
                         </div>
                     </div>
                 </div>
