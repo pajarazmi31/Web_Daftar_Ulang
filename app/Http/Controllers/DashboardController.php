@@ -25,6 +25,8 @@ class DashboardController extends Controller
             $query->where('nama_role', 'operator');
         })->count();
 
+        $totalRegistrasi = RegistrasiPesertaDidik::all()->count();
+
         $pesertaTerbaru = PesertaDidik::with('registrasi')
             ->latest()
             ->take(5)
@@ -34,7 +36,8 @@ class DashboardController extends Controller
             'user',
             'totalPeserta',
             'totalOperator',
-            'pesertaTerbaru'
+            'pesertaTerbaru',
+            'totalRegistrasi'
         ));
     }
 
@@ -44,9 +47,6 @@ class DashboardController extends Controller
 
         // 1. Executive Summary Cards
         $totalPeserta = PesertaDidik::count();
-
-        // Asumsi total registrasi adalah peserta yang statusnya sudah 'diterima' atau 'registrasi'
-        // Sesuaikan string 'diterima' dengan nilai status di database Anda
         $totalRegistrasi = RegistrasiPesertaDidik::count();
 
         // 2. Laporan Keterisian Kuota per Kompetensi Keahlian (Jurusan)
@@ -55,29 +55,31 @@ class DashboardController extends Controller
             ->get();
 
         // 3. Proporsi Gender
-        // Sesuaikan string 'L' / 'P' atau 'Laki-laki' / 'Perempuan' dengan database Anda
         $pria = PesertaDidik::whereIn('jenis_kelamin', ['L', 'Laki-laki'])->count();
         $wanita = PesertaDidik::whereIn('jenis_kelamin', ['P', 'Perempuan'])->count();
 
-        // 4. Analisis Profil Afirmasi & Beasiswa
-        // Kolom punya_kip & penerima_kip disesuaikan dengan skema migration Anda
+        // 4. Analisis Profil Afirmasi & Beasiswa (PERBAIKAN DI SINI)
         $punyaKipBelumMenerima = PesertaDidik::where('punya_kip', true)
             ->where(function ($query) {
                 $query->where('penerima_kip', false)
                     ->orWhereNull('penerima_kip');
             })->count();
 
-        // Menghitung siswa jalur prestasi atau mendapatkan beasiswa
-        $totalBeasiswa = PesertaDidik::where('jenis_beasiswa', 'prestasi')->count();
+        // Ambil data total masing-masing sesuai string ENUM di Migration Anda
+        $beasiswaBerprestasi = PesertaDidik::where('jenis_beasiswa', 'Anak Berprestasi')->count();
+        $beasiswaMiskin       = PesertaDidik::where('jenis_beasiswa', 'Anak Miskin')->count();
+        $beasiswaPendidikan   = PesertaDidik::where('jenis_beasiswa', 'Pendidikan')->count();
+        $beasiswaUnggulan     = PesertaDidik::where('jenis_beasiswa', 'Unggulan')->count();
 
-        // 5. Top 3 Asal Sekolah Terbanyak (Feeder)
+        // 5. Top 5 Asal Sekolah Terbanyak (Feeder)
         $topSekolahAsal = RegistrasiPesertaDidik::select('sekolah_asal', DB::raw('count(*) as total'))
             ->whereNotNull('sekolah_asal')
             ->groupBy('sekolah_asal')
             ->orderBy('total', 'desc')
-            ->take(3)
+            ->take(5)
             ->get();
 
+        // Pastikan semua variabel baru dimasukkan ke dalam compact()
         return view('kepsek.dashboard', compact(
             'user',
             'totalPeserta',
@@ -86,7 +88,10 @@ class DashboardController extends Controller
             'pria',
             'wanita',
             'punyaKipBelumMenerima',
-            'totalBeasiswa',
+            'beasiswaBerprestasi',
+            'beasiswaMiskin',
+            'beasiswaPendidikan',
+            'beasiswaUnggulan',
             'topSekolahAsal'
         ));
     }

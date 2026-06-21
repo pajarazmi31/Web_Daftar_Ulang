@@ -119,12 +119,12 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
         </div>
         <!-- Komponen 2: Top Asal Sekolah (Feeder) -->
         <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
-            <h3 class="text-base font-semibold text-slate-900 tracking-tight mb-2">Top 3 Asal Sekolah Terbanyak</h3>
+            <h3 class="text-base font-semibold text-slate-900 tracking-tight mb-2">Top 5 Asal Sekolah Terbanyak</h3>
             <p class="text-xs text-slate-400 mb-4">Sekolah asal yang paling banyak menyumbang calon peserta didik.</p>
 
             <div class="space-y-3">
                 @forelse($topSekolahAsal ?? [] as $sekolah)
-                <div class="flex justify-between items-center p-2.5 hover:bg-slate-50 rounded-xl transition">
+                <div class="flex justify-between items-center p-3.5 hover:bg-slate-50 rounded-xl transition">
                     <div class="flex items-center space-x-3 text-sm">
                         <!-- Mengganti Emoji Gedung Sekolah Tradisional -->
                         <div class="text-slate-400">
@@ -186,8 +186,7 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
             </div>
 
         </div>
-        <!-- Komponen 1: Analisis Kebutuhan Bantuan (KIP & Beasiswa) -->
-        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm lg:col-span-2">
+<div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm lg:col-span-2">
             <div class="mb-5">
                 <h3 class="text-base font-semibold text-slate-900 tracking-tight">Analisis Profil Penerima Beasiswa</h3>
                 <p class="text-xs text-slate-400 mt-0.5 mb-3">Rincian kuantitas data siswa berdasarkan kategori beasiswa yang diajukan.</p>
@@ -198,7 +197,7 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
                     <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
                     <span class="text-xs text-slate-400 font-medium block mb-1 truncate">Anak Berprestasi</span>
                     <span class="text-2xl font-bold text-slate-800 block leading-none my-1">
-                        {{ $beasiswaBerprestasi ?? 0 }}
+                        {{ $beasiswaBerprestasi }}
                     </span>
                 </div>
 
@@ -206,7 +205,7 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
                     <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
                     <span class="text-xs text-slate-400 font-medium block mb-1 truncate">Bantuan Afirmasi</span>
                     <span class="text-2xl font-bold text-slate-800 block leading-none my-1">
-                        {{ $beasiswaMiskin ?? 0 }}
+                        {{ $beasiswaMiskin }}
                     </span>
                 </div>
 
@@ -214,7 +213,7 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
                     <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
                     <span class="text-xs text-slate-400 font-medium block mb-1 truncate">Pendidikan</span>
                     <span class="text-2xl font-bold text-slate-800 block leading-none my-1">
-                        {{ $beasiswaPendidikan ?? 0 }}
+                        {{ $beasiswaPendidikan }}
                     </span>
                 </div>
 
@@ -222,7 +221,7 @@ Halaman pemantauan pendaftaran, kuota daya tampung, dan demografi peserta didik
                     <div class="absolute top-0 left-0 w-1 h-full bg-sky-500"></div>
                     <span class="text-xs text-slate-400 font-medium block mb-1 truncate">Unggulan</span>
                     <span class="text-2xl font-bold text-slate-800 block leading-none my-1">
-                        {{ $beasiswaUnggulan ?? 0 }}
+                        {{ $beasiswaUnggulan }}
                     </span>
                 </div>
             </div>

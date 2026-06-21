@@ -46,7 +46,7 @@
             <div>
                 <p class="text-slate-400 text-sm font-medium tracking-wide">Total Registrasi</p>
                 <h3 class="text-3xl font-bold tracking-tight text-emerald-600 mt-2">
-                    {{ $registrasiLengkap ?? 0 }}
+                    {{ $totalRegistrasi ?? 0 }}
                 </h3>
             </div>
             <div class="p-3 rounded-xl bg-emerald-50 text-emerald-600">
