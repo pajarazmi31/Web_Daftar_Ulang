@@ -65,7 +65,7 @@ class LoginController extends Controller
         }
 
         if ($user->role->nama_role == 'kepsek') {
-            return redirect()->route('laporan.kepsek'); // Sesuaikan dengan nama route kepsek Anda
+            return redirect()->route('kepsek.dashboard'); // Sesuaikan dengan nama route kepsek Anda
         }
 
         // Keamanan tambahan jika role tidak dikenali

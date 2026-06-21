@@ -17,68 +17,69 @@ Sistem Informasi Daftar Ulang & Registrasi Peserta Didik
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
         <!-- Total Peserta Didik -->
-    <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-        <div class="flex justify-between items-start">
-            <div>
-                <p class="text-slate-400 text-sm font-medium tracking-wide">Total Peserta Didik</p>
-                <h3 class="text-3xl font-bold tracking-tight text-slate-800 mt-2">
-                    {{ $totalPeserta ?? 0 }}
-                </h3>
-            </div>
-            <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
-                </svg>
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-slate-400 text-xs font-medium tracking-wide">Total Peserta Didik</p>
+                    <h3 class="text-2xl font-bold tracking-tight text-slate-800 mt-2">
+                        {{ $totalPeserta ?? 0 }}
+                    </h3>
+                </div>
+                <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    </svg>
+                </div>
             </div>
         </div>
-    </div>
 
         <!-- Status: Diterima -->
-    <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-        <div class="flex justify-between items-start">
-            <div>
-                <p class="text-slate-400 text-sm font-medium tracking-wide">Siswa Diterima</p>
-                <h3 class="text-3xl font-bold tracking-tight text-slate-800 mt-2">
-                    {{ $statusDiterima ?? 0 }}
-                </h3>
-            </div>
-            <div class="p-3 rounded-xl bg-emerald-50 text-emerald-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-slate-400 text-xs font-medium tracking-wide">Siswa Diterima</p>
+                    <h3 class="text-2xl font-bold tracking-tight text-slate-800 mt-2">
+                        {{ $countDisetujui ?? 0 }}
+                    </h3>
+                </div>
+                <div class="p-3 rounded-xl bg-emerald-50 text-emerald-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
             </div>
         </div>
-    </div>
 
         <!-- Menunggu Verifikasi -->
-    <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-        <div class="flex justify-between items-start">
-            <div>
-                <p class="text-slate-400 text-sm font-medium tracking-wide">Siswa Ditolak</p>
-                <h3 class="text-3xl font-bold tracking-tight text-slate-800 mt-2">
-                    {{ $statusDitolak ?? 0 }}
-                </h3>
-            </div>
-            <div class="p-3 rounded-xl bg-rose-50 text-rose-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-slate-400 text-xs font-medium tracking-wide">Siswa Ditolak</p>
+                    <h3 class="text-2xl font-bold tracking-tight text-slate-800 mt-2">
+                        {{ $countDitolak ?? 0 }}
+                    </h3>
+                </div>
+                <div class="p-3 rounded-xl bg-rose-50 text-rose-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
             </div>
         </div>
-    </div>
 
-        <!-- Status: Draft & Ditolak (Digabung Ringkas) -->
-        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm transition hover:shadow-md flex flex-col justify-between">
-            <p class="text-slate-400 text-sm font-medium tracking-wide">Tinjauan Lainnya</p>
-            <div class="grid grid-cols-2 gap-2 divide-x divide-slate-100 mt-3">
-                <div class="text-left">
-                    <p class="text-xs text-slate-400">Draft</p>
-                    <p class="text-xl font-medium text-rose-600">{{ $statusDraft ?? 0 }}</p>
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-slate-400 text-xs font-medium tracking-wide">Menunggu Verifikasi</p>
+                    <h3 class="text-2xl font-bold tracking-tight text-slate-800 mt-2">
+                        {{ $countPending ?? 0 }}
+                    </h3>
                 </div>
-                <div class="text-left pl-4">
-                    <p class="text-xs text-slate-400">Pending</p>
-                    <p class="text-xl font-medium text-amber-600">{{ $statusPending ?? 0 }}</p>
+                <div class="p-3 rounded-xl bg-amber-50 text-amber-600">
+                    <svg class="w- h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                 </div>
             </div>
         </div>
@@ -101,6 +102,7 @@ Sistem Informasi Daftar Ulang & Registrasi Peserta Didik
                             <th class="px-6 py-3.5 font-medium w-16 text-center">No</th>
                             <th class="px-6 py-3.5 font-medium">NISN</th>
                             <th class="px-6 py-3.5 font-medium">Nama Lengkap</th>
+                            <th class="px-6 py-3.5 font-medium">Status Registrasi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
@@ -114,6 +116,9 @@ Sistem Informasi Daftar Ulang & Registrasi Peserta Didik
                             </td>
                             <td class="px-6 py-4 font-medium text-slate-800">
                                 {{ $item->nama_lengkap }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-slate-800">
+                                {{ $item->registrasi?->status_registrasi ?? 'Belum Registrasi' }}
                             </td>
                         </tr>
                         @empty
@@ -135,38 +140,51 @@ Sistem Informasi Daftar Ulang & Registrasi Peserta Didik
 
         <div class="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col justify-between">
             <div>
-                <h3 class="font-semibold text-slate-800 tracking-wide text-base mb-4">
-                    Akses Pintas
+                <h3 class="font-semibold text-slate-800 tracking-wide text-base mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
+                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>Informasi Operator</span>
                 </h3>
 
-                <div class="space-y-2.5">
-                    <a href="{{ route('manajemen_akun') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-sky-100 hover:bg-sky-50/40 transition-all duration-150">
-                        <span class="text-sm font-medium text-slate-700 group-hover:text-sky-700">Manajemen Akun</span>
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
+                <div class="flex items-center gap-4 pb-4 mb-4 ">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg uppercase shadow-inner">
+                        {{ substr(auth()->user()->name ?? 'OP', 0, 2) }}
+                    </div>
+                    <div class="overflow-hidden">
+                        <span class="block font-semibold text-slate-700 truncate">{{ auth()->user()->name ?? 'Operator Dapodik' }}</span>
+                    </div>
+                </div>
 
-                    <a href="{{ route('data-peserta.index') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-indigo-100 hover:bg-indigo-50/40 transition-all duration-150">
-                        <span class="text-sm font-medium text-slate-700 group-hover:text-indigo-500">Data Peserta Didik</span>
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
+                <div class="space-y-4">
+                    <div>
+                        <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Alamat Email</span>
+                        <span class="text-sm font-medium text-slate-600 block truncate">{{ auth()->user()->email ?? 'operator@sekolah.sch.id' }}</span>
+                    </div>
 
-                    <a href="{{ route('registrasi.index') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-emerald-100 hover:bg-emerald-50/40 transition-all duration-150">
-                        <span class="text-sm font-medium text-slate-700 group-hover:text-emerald-500">Registrasi Peserta</span>
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
+                    <div>
+                        <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Waktu Aktivitas</span>
+                        <span class="text-sm font-medium text-slate-600 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{{ now()->translatedFormat('H:i') }} WIB, {{ now()->translatedFormat('d M Y') }}</span>
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-6 pt-4 border-t border-slate-100 text-center">
-                <span class="text-xs text-slate-400">Punya kendala teknis? Hubungi bantuan.</span>
+            <div class="mt-6 pt-4 border-t border-slate-100">
+                <span class="block text-[11px] font-bold text-amber-500 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>Catatan Keamanan</span>
+                </span>
+                <p class="text-xs text-slate-400 leading-relaxed font-medium">
+                    Akun ini terikat dengan data Dapodik sekolah. Harap selalu jaga kerahasiaan kata sandi Anda dan lakukan log out setelah selesai menggunakan sistem.
+                </p>
             </div>
         </div>
-
     </div>
     @endsection

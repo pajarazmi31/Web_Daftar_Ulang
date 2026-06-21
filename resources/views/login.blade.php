@@ -68,8 +68,7 @@
             </div>
         </div>
 
-        <div class="p-8 sm:p-12 md:p-10 lg:p-14 flex flex-col justify-between bg-white">
-            
+        <div class="p-8 sm:p-12 md:p-10 lg:p-14 flex flex-col justify-between bg-white relative">
             <div class="my-auto space-y-6">
                 <div class="text-center md:text-left mb-6">
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
@@ -149,9 +148,14 @@
                     <div class="pt-2">
                         <button
                             type="submit"
-                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm py-2.5 px-4 rounded-xl shadow-md shadow-indigo-600/10 hover:shadow-lg hover:shadow-indigo-600/20 active:scale-[0.99] transition-all duration-150">
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm py-2.5 px-4 rounded-xl shadow-md shadow-indigo-600/10 hover:shadow-lg hover:shadow-indigo-600/20 active:scale-[0.99] transition-all duration-150 mb-2">
                             Masuk ke Dashboard
                         </button>
+                        <a href="{{route ('landingpage')}}"
+                            type="submit"
+                            class="flex items-center justify-center w-full bg-slate-400 hover:bg-slate-200 font-semibold text-sm py-2.5 px-4 rounded-xl shadow-md shadow-slate-600/10 hover:shadow-lg hover:shadow-slate-600/20 active:scale-[0.99] transition-all duration-150 mt-2">
+                            Kembali ke Dashboard
+                        </a>
                     </div>
                 </form>
             </div>

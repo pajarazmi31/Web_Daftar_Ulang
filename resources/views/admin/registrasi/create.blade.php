@@ -88,8 +88,9 @@
             <div>
                 <label class="block text-slate-600 font-medium mb-1 text-sm">8. Status Verifikasi Awal *</label>
                 <select name="status_registrasi" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-sm">
-                    <option value="Draft">Draft</option>
                     <option value="Menunggu Verifikasi">Menunggu Verifikasi</option>
+                    <option value="Diterima">Diterima</option>
+                    <option value="Ditolak">Ditolak</option>
                 </select>
             </div>
         </div>

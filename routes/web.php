@@ -9,9 +9,8 @@ use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\kepsek\LaporanController;
 use App\Http\Controllers\Siswa\SiswaController;
 
-Route::get('/', function () {
-    return view('landingpage');
-});
+
+Route::get('/', [DashboardController::class, 'landingpage'])->name('landingpage');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');

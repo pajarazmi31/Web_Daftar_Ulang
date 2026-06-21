@@ -14,6 +14,34 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
+
+        @media print {
+
+            /* Sembunyikan elemen global yang tidak perlu dicetak (seperti sidebar atau navbar dari dashboard) */
+            .print\:hidden,
+            nav,
+            aside,
+            header,
+            footer {
+                display: none !important;
+            }
+
+            /* Hilangkan efek bayangan berat dan transisi yang membebani memori browser saat printing */
+            * {
+                box-shadow: none !important;
+                text-shadow: none !important;
+                transition: none !important;
+                background-color: transparent !important;
+            }
+
+            /* Pastikan kontainer utama mengambil lebar penuh halaman */
+            body,
+            .space-y-6 {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        }
     </style>
 
     @vite(['resources/css/app.css','resources/js/app.js'])
@@ -242,13 +270,6 @@
                                 <p class="text-[10px] text-slate-400 capitalize">{{ auth()->user()->role->nama_role }}</p>
                             </div>
 
-                            <a href="#" class="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 transition">
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                <span>Profil Anda</span>
-                            </a>
-
                             <hr class="border-slate-100">
 
                             {{-- TOMBOL LOGOUT DROPDOWN --}}
@@ -325,4 +346,5 @@
     </form>
 
 </body>
+
 </html>

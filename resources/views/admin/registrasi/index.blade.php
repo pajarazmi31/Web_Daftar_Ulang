@@ -69,7 +69,7 @@
             @endif
             <button class="text-xs text-slate-400 hover:text-slate-600 font-medium transition-colors">Cari</button>
         </div>
-        
+
     </div>
 
     <div class="flex flex-wrap items-center gap-2">
@@ -107,9 +107,9 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-slate-50 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <th class="px-6 py-4 w-16 text-center">No</th>
                     <th class="py-4 px-6">Siswa</th>
                     <th class="py-4 px-6">Pilihan Jurusan</th>
-                    <th class="py-4 px-6">Tanggal Daftar</th>
                     <th class="py-4 px-6">Status</th>
                     <th class="py-4 px-6 text-center">Aksi</th>
                 </tr>
@@ -118,16 +118,13 @@
                 {{-- Ganti $registrasis dengan variabel loop asli Anda dari Controller, contoh: @foreach($registrasi as $item) --}}
                 @forelse($registrasis ?? [] as $item)
                 <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="px-6 py-4 text-center text-slate-400 font-medium">{{ $loop->iteration }}</td>
                     <td class="py-4 px-6">
                         <div class="font-semibold text-slate-700">{{ $item->pesertadidik->nama_lengkap ?? 'Nama Tidak Ada' }}</div>
                         <div class="text-xs text-slate-400 mt-0.5">NISN: {{ $item->pesertadidik->nisn ?? '-' }}</div>
                     </td>
                     <td class="py-4 px-6">
                         <span class="font-medium text-slate-700">{{ $item->kompetensi_keahlian ?? '-' }}</span>
-                        <div class="text-xs text-slate-400 mt-0.5">{{ $item->jalur_pendaftaran ?? 'Reguler' }}</div>
-                    </td>
-                    <td class="py-4 px-6 text-slate-500">
-                        {{ $item->created_at ? $item->created_at->translatedFormat('d F Y') : '-' }}
                     </td>
                     <td class="py-4 px-6">
                         {{-- Penyederhanaan Logika Warna Badge Status --}}

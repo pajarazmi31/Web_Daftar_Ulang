@@ -28,8 +28,10 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
                 </div>
 
                 <div class="pt-6">
-                    <button type="submit" class="bg-slate-100 hover:bg-slate-200  text-sm font-medium px-4 py-2 rounded-xl transition duration-150 shadow-sm flex items-center space-x-1">
-                        <span>Filter</span>
+                    <button type="submit" class="bg-slate-100 hover:bg-slate-200 text-sm font-medium px-4 py-2 rounded-xl transition duration-150 shadow-sm flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -48,11 +50,10 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
                 <thead>
                     <tr class="bg-slate-50/75 text-slate-400 text-xs font-bold uppercase tracking-wider border-b border-slate-100">
                         <th class="px-6 py-4 text-center w-12">No</th>
+                        <th class="px-6 py-4">NISN / NIK</th>
                         <th class="px-6 py-4">Nama Lengkap</th>
                         <th class="px-6 py-4">Jurusan Pilihan</th>
-                        <th class="px-6 py-4">Asal Sekolah</th>
                         <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4">NISN / NIK</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -62,28 +63,36 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
                         <td class="px-6 py-4 text-center font-medium text-slate-400">
                             {{ $laporanData->firstItem() + $key }}
                         </td>
+                        <td class="px-6 py-4 font-mono text-xs text-slate-500">
+                            NS: {{ $item->nisn ?? '-' }} <br> NK: {{ $item->nik }}
+                        </td>
                         <td class="px-6 py-4 font-semibold text-slate-900">
                             {{ $item->nama_lengkap }}
                         </td>
                         <td class="px-6 py-4 font-medium">
                             {{ $item->kompetensi_keahlian ?? '-' }}
                         </td>
-                        <td class="px-6 py-4 text-slate-500">
-                            {{ $item->sekolah_asal ?? '-' }}
-                        </td>
                         <td class="px-6 py-4 text-center">
-                            @if($item->status_registrasi == 'Diterima')
-                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">Diterima</span>
-                            @elseif($item->status_registrasi == 'Menunggu Verifikasi')
-                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">Pending</span>
-                            @elseif($item->status_registrasi == 'Ditolak')
-                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700">Ditolak</span>
+                            {{-- Penyederhanaan Logika Warna Badge Status --}}
+                            @if(($item->status_registrasi ?? 'Menunggu Verifikasi') === 'Diterima')
+                            <span class="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-500 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </span>
+                            @elseif(($item->status_registrasi ?? 'Menunggu Verifikasi') === 'Ditolak')
+                            <span class="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </span>
                             @else
-                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">Draft</span>
+                            <span class="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </span>
                             @endif
-                        </td>
-                        <td class="px-6 py-4 font-mono text-xs text-slate-500">
-                            NS: {{ $item->nisn ?? '-' }} <br> NK: {{ $item->nik }}
                         </td>
                         <td class="px-6 py-4 text-center">
                             <a href="{{ route('laporan.kepsek.detail', $item->id) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition inline-block" title="Lihat Detail Lengkap">

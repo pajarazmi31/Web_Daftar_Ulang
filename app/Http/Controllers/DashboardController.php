@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    public function landingpage()
+    {
+        return view('landingpage');
+    }
+
     public function admin()
     {
         $user = Auth::user();
@@ -20,10 +25,10 @@ class DashboardController extends Controller
             $query->where('nama_role', 'operator');
         })->count();
 
-$pesertaTerbaru = PesertaDidik::with('registrasi')
-        ->latest()
-        ->take(5)
-        ->get();
+        $pesertaTerbaru = PesertaDidik::with('registrasi')
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('admin.dashboard', compact(
             'user',
@@ -39,7 +44,7 @@ $pesertaTerbaru = PesertaDidik::with('registrasi')
 
         // 1. Executive Summary Cards
         $totalPeserta = PesertaDidik::count();
-        
+
         // Asumsi total registrasi adalah peserta yang statusnya sudah 'diterima' atau 'registrasi'
         // Sesuaikan string 'diterima' dengan nilai status di database Anda
         $totalRegistrasi = RegistrasiPesertaDidik::count();
@@ -57,9 +62,9 @@ $pesertaTerbaru = PesertaDidik::with('registrasi')
         // 4. Analisis Profil Afirmasi & Beasiswa
         // Kolom punya_kip & penerima_kip disesuaikan dengan skema migration Anda
         $punyaKipBelumMenerima = PesertaDidik::where('punya_kip', true)
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('penerima_kip', false)
-                      ->orWhereNull('penerima_kip');
+                    ->orWhereNull('penerima_kip');
             })->count();
 
         // Menghitung siswa jalur prestasi atau mendapatkan beasiswa
@@ -99,15 +104,24 @@ $pesertaTerbaru = PesertaDidik::with('registrasi')
             $query->where('nama_role', 'operator');
         })->count();
 
-        $pesertaTerbaru = PesertaDidik::latest()
+        $pesertaTerbaru = PesertaDidik::with('registrasi')
+            ->latest()
             ->take(5)
             ->get();
+
+        $countPending   = RegistrasiPesertaDidik::where('status_registrasi', 'Menunggu Verifikasi')->count();
+        $countDisetujui = RegistrasiPesertaDidik::where('status_registrasi', 'Diterima')->count();
+        $countDitolak   = RegistrasiPesertaDidik::where('status_registrasi', 'Ditolak')->count();
+
 
         return view('operator.dashboard', compact(
             'user',
             'totalPeserta',
             'totalOperator',
-            'pesertaTerbaru'
+            'pesertaTerbaru',
+            'countPending',
+            'countDisetujui',
+            'countDitolak'
         ));
     }
 }

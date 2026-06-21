@@ -113,40 +113,54 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col justify-between">
-        <div>
-            <h3 class="font-semibold text-slate-800 tracking-wide text-base mb-4">
-                Akses Pintas
-            </h3>
+<div class="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col justify-between">
+    <div>
+        <h3 class="font-semibold text-slate-800 tracking-wide text-base mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Informasi Admin</span>
+        </h3>
 
-            <div class="space-y-2.5">
-                <a href="{{ route('manajemen_akun') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-sky-100 hover:bg-sky-50/40 transition-all duration-150">
-                    <span class="text-sm font-medium text-slate-700 group-hover:text-sky-700">Manajemen Akun</span>
-                    <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-
-                <a href="{{ route('data-peserta.index') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-indigo-100 hover:bg-indigo-50/40 transition-all duration-150">
-                    <span class="text-sm font-medium text-slate-700 group-hover:text-indigo-500">Data Peserta Didik</span>
-                    <svg class="w-4 h-4 text-slate-400 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-
-                <a href="{{ route('registrasi.index') }}" class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-emerald-100 hover:bg-emerald-50/40 transition-all duration-150">
-                    <span class="text-sm font-medium text-slate-700 group-hover:text-emerald-500">Registrasi Peserta</span>
-                    <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
+        <div class="flex items-center gap-4 pb-4 mb-4 ">
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg uppercase shadow-inner">
+                {{ substr(auth()->user()->name ?? 'AD', 0, 2) }}
+            </div>
+            <div class="overflow-hidden">
+                <span class="block font-semibold text-slate-700 truncate">{{ auth()->user()->name ?? 'Administrator' }}</span>
             </div>
         </div>
 
-        <div class="mt-6 pt-4 border-t border-slate-100 text-center">
-            <span class="text-xs text-slate-400">Punya kendala teknis? Hubungi bantuan.</span>
+        <div class="space-y-4">
+            <div>
+                <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Alamat Email</span>
+                <span class="text-sm font-medium text-slate-600 block truncate">{{ auth()->user()->email ?? 'admin@sekolah.sch.id' }}</span>
+            </div>
+
+            <div>
+                <span class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Waktu Aktivitas</span>
+                <span class="text-sm font-medium text-slate-600 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{{ now()->translatedFormat('H:i') }} WIB, {{ now()->translatedFormat('d M Y') }}</span>
+                </span>
+            </div>
         </div>
     </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-100">
+        <span class="block text-[11px] font-bold text-amber-500 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>Catatan Keamanan</span>
+        </span>
+        <p class="text-xs text-slate-400 leading-relaxed font-medium">
+            Akun ini memiliki hak akses penuh terhadap konfigurasi sistem dan manajemen pengguna. Pastikan untuk selalu logout setelah selesai menggunakannya dari perangkat mana pun.
+        </p>
+    </div>
+</div>
 
 </div>
 @endsection
