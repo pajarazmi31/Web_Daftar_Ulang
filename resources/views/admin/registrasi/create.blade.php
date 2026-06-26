@@ -34,26 +34,6 @@
             </div>
 
             <div>
-                <label class="block text-slate-600 font-medium mb-1 text-sm">2. Kompetensi Keahlian Jurusan *</label>
-                <select name="kompetensi_keahlian" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-sm">
-                    <option value="">-- Pilih Kompetensi Keahlian --</option>
-                    @foreach([
-                    'Teknik Otomotif',
-                    'Teknik Jaringan Komputer dan Telekomunikasi',
-                    'Pengembangan Perangkat Lunak dan Gim',
-                    'Desain Pemodelan dan Informasi Bangunan',
-                    'Manajemen Perkantoran dan Layanan Bisnis',
-                    'Akuntansi dan Keuangan Lembaga',
-                    'Seni Pertunjukan'
-                    ] as $jurusan)
-                    <option value="{{ $jurusan }}" {{ old('kompetensi_keahlian') == $jurusan ? 'selected' : '' }}>
-                        {{ $jurusan }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
                 <label class="block text-slate-600 font-medium mb-1 text-sm">3. Jenis Pendaftaran *</label>
                 <select name="jenis_pendaftaran" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-sm">
                     @foreach(['Siswa Baru', 'Pindahan', 'Kembali Bersekolah'] as $item)
@@ -101,30 +81,47 @@
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Upload Kartu Keluarga (KK)</label>
                     <input type="file" name="kk" class="w-full p-1.5 border border-slate-200 rounded-lg">
+                    @error('kk')
+                    <p class="text-rose-500 text-xs mt-1">
+                        Ukuran file Anda terlalu besar (maksimal 2MB) atau format tidak sesuai.
+                    </p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Upload KTP Orang Tua</label>
                     <input type="file" name="ktp_ortu" class="w-full p-1.5 border border-slate-200 rounded-lg">
+                    @error('ktp_ortu')
+                    <p class="text-rose-500 text-xs mt-1">
+                        Ukuran file Anda terlalu besar (maksimal 2MB) atau format tidak sesuai.
+                    </p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Upload Akta Kelahiran</label>
                     <input type="file" name="akta_kelahiran" class="w-full p-1.5 border border-slate-200 rounded-lg">
+                    @error('akta_kelahiran')
+                    <p class="text-rose-500 text-xs mt-1">
+                        Ukuran file Anda terlalu besar (maksimal 2MB) atau format tidak sesuai.
+                    </p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Upload Surat Keterangan Lulus (SKL)</label>
                     <input type="file" name="surat_keterangan_lulus" class="w-full p-1.5 border border-slate-200 rounded-lg">
+                    @error('surat_keterangan_lulus')
+                    <p class="text-rose-500 text-xs mt-1">
+                        Ukuran file Anda terlalu besar (maksimal 2MB) atau format tidak sesuai.
+                    </p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">Upload Kartu Kesejahteraan (KKS/KPS jika ada)</label>
                     <input type="file" name="kartu_kesejahteraan" class="w-full p-1.5 border border-slate-200 rounded-lg">
-                </div>
-                <div>
-                    <label class="block text-slate-600 font-medium mb-1">Upload SPTJM Berkas</label>
-                    <input type="file" name="sptjm" class="w-full p-1.5 border border-slate-200 rounded-lg">
-                </div>
-                <div>
-                    <label class="block text-slate-600 font-medium mb-1">Upload Surat Pernyataan Tata Tertib Sekolah</label>
-                    <input type="file" name="surat_pernyataan_tata_tertib" class="w-full p-1.5 border border-slate-200 rounded-lg">
+                    @error('kartu_kesejahteraan')
+                    <p class="text-rose-500 text-xs mt-1">
+                        Ukuran file Anda terlalu besar (maksimal 2MB) atau format tidak sesuai.
+                    </p>
+                    @enderror
                 </div>
             </div>
         </div>

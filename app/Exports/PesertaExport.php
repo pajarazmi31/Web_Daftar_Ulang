@@ -23,8 +23,6 @@ class PesertaExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            // I. INFORMASI PENDAFTARAN
-            'Nomor Pendaftaran',
             
             // II. DATA PRIBADI SISWA
             'Nama Lengkap',
@@ -35,6 +33,8 @@ class PesertaExport implements FromCollection, WithHeadings, WithMapping
             'Tempat Lahir',
             'Tanggal Lahir',
             'No. Registrasi Akta',
+            'Kompetensi Keahlian',
+            'Jalur Pendaftaran',
             'Agama',
             'Kewarganegaraan',
             'Negara Asal',
@@ -47,6 +47,8 @@ class PesertaExport implements FromCollection, WithHeadings, WithMapping
             'Dusun',
             'Desa/Kelurahan',
             'Kecamatan',
+            'Kabupaten',
+            'Provinsi',
             'Kode Pos',
             'Lintang',
             'Bujur',
@@ -113,8 +115,6 @@ class PesertaExport implements FromCollection, WithHeadings, WithMapping
     public function map($peserta): array
     {
         return [
-            // I. INFORMASI PENDAFTARAN
-            $peserta->nomor_pendaftaran,
 
             // II. DATA PRIBADI SISWA
             $peserta->nama_lengkap,
@@ -125,6 +125,8 @@ class PesertaExport implements FromCollection, WithHeadings, WithMapping
             $peserta->tempat_lahir,
             $peserta->tanggal_lahir,
             $peserta->no_registrasi_akta,
+            $peserta->kompetensi_keahlian,
+            $peserta->jalur_pendaftaran,
             $peserta->agama,
             $peserta->kewarganegaraan,
             $peserta->negara_asal,
@@ -137,6 +139,8 @@ class PesertaExport implements FromCollection, WithHeadings, WithMapping
             $peserta->dusun,
             $peserta->desa_kelurahan,
             $peserta->kecamatan,
+            $peserta->kabupaten,
+            $peserta->provinsi,
             $peserta->kode_pos,
             $peserta->lintang,
             $peserta->bujur,

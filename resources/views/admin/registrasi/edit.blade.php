@@ -25,28 +25,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="block text-slate-600 font-medium mb-1 text-sm">Nama Peserta Didik (Terkunci)</label>
-                <input type="text" disabled value="{{ $registrasi->pesertaDidik->nama_lengkap ?? 'Siswa Terhapus' }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-slate-100 text-slate-500 text-sm font-semibold">
+                <input type="text" readonly value="{{ $registrasi->pesertaDidik->nama_lengkap ?? 'Siswa Terhapus' }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-slate-100 text-slate-500 text-sm font-semibold">
                 <input type="hidden" name="peserta_didik_id" value="{{ $registrasi->peserta_didik_id }}">
-            </div>
-
-            <div>
-                <label class="block text-slate-600 font-medium mb-1 text-sm">Kompetensi Keahlian Jurusan *</label>
-                <select name="kompetensi_keahlian" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-sm">
-                    <option value="">-- Pilih Kompetensi Keahlian --</option>
-                    @foreach([
-                    'Teknik Otomotif',
-                    'Teknik Jaringan Komputer dan Telekomunikasi',
-                    'Pengembangan Perangkat Lunak dan Gim',
-                    'Desain Pemodelan dan Informasi Bangunan',
-                    'Manajemen Perkantoran dan Layanan Bisnis',
-                    'Akuntansi dan Keuangan Lembaga',
-                    'Seni Pertunjukan'
-                    ] as $jurusan)
-                    <option value="{{ $jurusan }}" {{ old('kompetensi_keahlian', $registrasi->kompetensi_keahlian) == $jurusan ? 'selected' : '' }}>
-                        {{ $jurusan }}
-                    </option>
-                    @endforeach
-                </select>
             </div>
 
             <div>
@@ -81,7 +61,7 @@
                 <input type="text" name="cita_cita" value="{{ old('cita_cita', $registrasi->cita_cita) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl text-sm">
             </div>
 
-            <div>
+            <div >
                 <label class="block text-indigo-600 font-bold mb-1 text-sm">Penetapan Status Registrasi Akhir *</label>
                 <select name="status_registrasi" required class="w-full px-4 py-2 border border-indigo-300 rounded-xl bg-indigo-50/50 font-semibold text-sm">
                     @foreach(['Menunggu Verifikasi', 'Diterima', 'Ditolak'] as $status)
@@ -100,10 +80,8 @@
                 'akta_kelahiran' => 'Akta Kelahiran',
                 'surat_keterangan_lulus' => 'Surat Keterangan Lulus (SKL)',
                 'kartu_kesejahteraan' => 'Kartu Kesejahteraan (KKS/KPS)',
-                'sptjm' => 'Surat Pernyataan SPTJM',
-                'surat_pernyataan_tata_tertib' => 'Surat Pernyataan Tata Tertib Sekolah'
                 ] as $fieldName => $labelName)
-                <div class="p-3 border border-slate-100 rounded-xl bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="p-3 border {{ $errors->has($fieldName) ? 'border-rose-200 bg-rose-50/20' : 'border-slate-100 bg-slate-50/50' }} rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="w-1/3">
                         <span class="font-semibold text-slate-700 block">{{ $labelName }}</span>
                         @if($registrasi->$fieldName)
@@ -115,7 +93,17 @@
                         @endif
                     </div>
                     <div class="flex-1">
-                        <input type="file" name="{{ $fieldName }}" class="w-full p-1 bg-white border border-slate-200 rounded-lg">
+                        {{-- Border input otomatis merah jika eror --}}
+                        <input type="file" name="{{ $fieldName }}" class="w-full p-1 bg-white border {{ $errors->has($fieldName) ? 'border-rose-500' : 'border-slate-200' }} rounded-lg">
+
+                        {{-- Cek apakah ada eror spesifik untuk field ini --}}
+                        @error($fieldName)
+                        <p class="text-rose-500 font-medium text-[11px] mt-1.5 flex items-center gap-1">
+                            ⚠️ {{ $message }}
+                        </p>
+                        @else
+                        <p class="text-[10px] text-slate-400 mt-1">*Biarkan kosong jika tidak ingin mengubah dokumen lama.</p>
+                        @enderror
                     </div>
                 </div>
                 @endforeach

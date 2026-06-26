@@ -24,8 +24,6 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnDelete();
 
-            $table->string('kompetensi_keahlian')->nullable();
-
             $table->enum('jenis_pendaftaran', [
                 'Siswa Baru',
                 'Pindahan',
@@ -57,10 +55,6 @@ return new class extends Migration
             $table->string('surat_keterangan_lulus')->nullable();
 
             $table->string('kartu_kesejahteraan')->nullable();
-
-            $table->string('sptjm')->nullable();
-
-            $table->string('surat_pernyataan_tata_tertib')->nullable();
 
             $table->timestamps();
         });

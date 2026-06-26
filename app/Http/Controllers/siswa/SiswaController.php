@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Siswa;
+namespace App\Http\Controllers\siswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PesertaDidik;
 use App\Models\RegistrasiPesertaDidik;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -19,17 +20,16 @@ class SiswaController extends Controller
     {
         $user = Auth::user();
 
-        // Ambil data peserta milik siswa yang login
         $peserta = PesertaDidik::where('user_id', $user->id)->first();
-
-        // Ambil record registrasi untuk mengecek status approval pendaftaran
         $registrasi = RegistrasiPesertaDidik::where('user_id', $user->id)->first();
 
-        // Siswa dianggap sudah registrasi jika datanya sudah ada di PesertaDidik ATAU di tabel registrasi
-        $sudahRegistrasi = ($peserta || $registrasi) ? true : false;
-        $statusRegistrasi = $registrasi ? $registrasi->status : ($peserta ? 'disetujui' : 'belum');
+        // PERBAIKAN: Hanya anggap TRUE jika data memang ada di tabel registrasi
+        $sudahRegistrasi = $registrasi ? true : false;
 
-        return view('siswa.dashboard', compact('peserta', 'sudahRegistrasi', 'statusRegistrasi'));
+        // Ambil status langsung dari baris registrasi, jika tidak ada set ke 'belum'
+        $statusRegistrasi = $registrasi ? $registrasi->status_registrasi : 'belum';
+
+        return view('siswa.dashboard', compact('peserta', 'sudahRegistrasi', 'statusRegistrasi', 'registrasi'));
     }
 
     /**
@@ -83,6 +83,8 @@ class SiswaController extends Controller
             'tempat_lahir'       => 'required|string|max:255',
             'tanggal_lahir'      => 'required|date',
             'no_registrasi_akta' => 'nullable|string|max:255',
+            'jalur_pendaftaran'  => 'nullable|string|max:255',
+            'kompetensi_keahlian' => 'nullable|string|max:255',
             'agama'              => 'required|string',
             'kewarganegaraan'    => 'required|in:WNI,WNA',
             'negara_asal'        => 'required_if:kewarganegaraan,WNA|nullable|string|max:255',
@@ -93,6 +95,8 @@ class SiswaController extends Controller
             'dusun'              => 'nullable|string|max:255',
             'desa_kelurahan'     => 'required|string|max:255',
             'kecamatan'          => 'required|string|max:255',
+            'kabupaten'          => 'required|string|max:255',
+            'provinsi'          => 'required|string|max:255',
             'kode_pos'           => 'nullable|string|max:10',
             'lintang'            => 'nullable|string|max:255',
             'bujur'              => 'nullable|string|max:255',
@@ -174,19 +178,19 @@ class SiswaController extends Controller
     {
         $user = Auth::user();
 
-        // FITUR PROTEKSI: Cek apakah data siswa sudah ada di tabel PesertaDidik (diinput operator/mandiri)
-        $cekPeserta = PesertaDidik::where('user_id', $user->id)->exists();
-
-        // Cek juga di tabel registrasi status perantara
-        $cekRegistrasi = RegistrasiPesertaDidik::where('user_id', $user->id)->exists();
-
-        // Gabungkan kondisi: Jika salah satu bernilai true, kunci akses registrasi siswa!
-        $sudahRegistrasi = ($cekPeserta || $cekRegistrasi);
-
-        // Ambil data dasar user untuk pre-fill data (opsional)
         $peserta = PesertaDidik::where('user_id', $user->id)->first();
+        $registrasi = RegistrasiPesertaDidik::where('user_id', $user->id)->first();
 
-        return view('siswa.registrasi', compact('peserta', 'sudahRegistrasi'));
+        $sudahRegistrasi = false;
+
+        // VALIDASI ASLI: Hanya anggap sudah registrasi jika datanya MEMANG ADA di tabel registrasi
+        if ($registrasi) {
+            if ($registrasi->status_registrasi == 'Menunggu Verifikasi' || $registrasi->status_registrasi == 'Diterima') {
+                $sudahRegistrasi = true;
+            }
+        }
+
+        return view('siswa.registrasi', compact('peserta', 'registrasi', 'sudahRegistrasi'));
     }
 
     /**
@@ -195,65 +199,88 @@ class SiswaController extends Controller
     public function storeRegistrasi(Request $request)
     {
         $user = Auth::user();
+        $customMessages = [
+            'max' => 'Ukuran file :attribute melebihi 2MB. Silakan kompres terlebih dahulu sebelum diunggah.',
+            'mimes' => 'Format file :attribute harus berupa PDF, JPG, JPEG, atau PNG.'
+        ];
 
-        // FITUR KESELAMATAN GANDA: Cek kembali sebelum insert untuk menghindari bypass bypass URL/Postman
-        $cekPeserta = PesertaDidik::where('user_id', $user->id)->exists();
-        $cekRegistrasi = RegistrasiPesertaDidik::where('user_id', $user->id)->exists();
+        $customAttributes = [
+            'kk' => 'Kartu Keluarga (KK)',
+            'ktp_ortu' => 'KTP Orang Tua',
+            'akta_kelahiran' => 'Akta Kelahiran',
+            'surat_keterangan_lulus' => 'Surat Keterangan Lulus (SKL)',
+            'kartu_kesejahteraan' => 'Kartu Kesejahteraan'
+        ];
 
-        if ($cekPeserta || $cekRegistrasi) {
-            return redirect()->route('siswa.dashboard')->with('error', 'Registrasi tidak dapat dilakukan. Akun Anda sudah terdaftar atau diinput oleh Operator.');
-        }
-
-        // Validasi ketat gabungan input Jurusan, Berkas File, dan Identitas Dasar Peserta Didik
+        // 1. Validasi Input
         $validated = $request->validate([
-            // Input Pilihan Jurusan & Sekolah
-            'kompetensi_keahlian' => 'required|string',
-            'jalur_pendaftaran'   => 'required|string',
             'jenis_pendaftaran'   => 'required|string',
             'sekolah_asal'        => 'nullable|string|max:255',
             'pernah_paud'         => 'required|in:Ya,Tidak',
             'hobi'                => 'nullable|string|max:255',
             'cita_cita'           => 'nullable|string|max:255',
 
-            // Berkas-berkas lampiran (Max 2MB per file)
-            'kk'                             => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'ktp_ortu'                       => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'akta_kelahiran'                 => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'surat_keterangan_lulus'         => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'kk'                             => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'ktp_ortu'                       => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'akta_kelahiran'                 => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'surat_keterangan_lulus'         => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'kartu_kesejahteraan'            => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'sptjm'                          => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'surat_pernyataan_tata_tertib'   => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
+        ], $customMessages, $customAttributes);
 
-        // --- PROSES UPLOAD FILE ATTACHMENT ---
-        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan', 'sptjm', 'surat_pernyataan_tata_tertib'];
+        // 2. Proses upload berkas fisik ke storage
+        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan'];
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
-                // Menyimpan berkas ke direktori storage/app/public/registrasi_berkas
                 $path = $request->file($field)->store('registrasi_berkas', 'public');
-                $validated[$field] = $path; // Amankan path ke dalam array array insert
+                $validated[$field] = $path;
+            } else {
+                $validated[$field] = null;
             }
         }
 
-        // Data identitas fallback otomatis dari user login (bisa dikondisikan sesuai kebutuhan database Anda)
-        $validated['user_id']           = $user->id;
-        $validated['created_by']        = $user->id;
-        $validated['nama_lengkap']      = $user->name; // Diambil dari default nama akun register user
-        $validated['nomor_pendaftaran'] = 'REG-' . date('Ymd') . '-' . strtoupper(Str::random(5));
+        $profilLama = PesertaDidik::where('user_id', $user->id)->first();
 
-        // Jika di tabel database Anda nama kolomnya 'nama' bukan 'nama_lengkap'
-        $validated['nama']              = $user->name;
+        if ($profilLama) {
+            // 1. Data untuk tabel Utama (PesertaDidik)
+            $dataPeserta = [
+                'nama_lengkap'        => $user->name,
+            ];
 
-        // 1. Simpan data ke tabel Utama Peserta Didik
-        PesertaDidik::create($validated);
+            // 2. Siapkan data relasi dan status baru
+            $validated['user_id']           = $user->id;
+            $validated['peserta_didik_id']  = $profilLama->id;
+            $validated['status_registrasi'] = 'Menunggu Verifikasi';
+            $validated['tanggal_daftar']    = now();
 
-        // 2. Simpan record log ke tabel perantara Registrasi untuk tracking approval admin/operator
-        RegistrasiPesertaDidik::create([
-            'user_id'        => $user->id,
-            'status'         => 'pending',
-            'tanggal_daftar' => now(),
-        ]);
+            // 3. Cek apakah siswa ini SECARA FISIK sudah pernah membuat data registrasi sebelumnya
+            $registrasiEksis = RegistrasiPesertaDidik::where('user_id', $user->id)->first();
 
-        return redirect()->route('siswa.dashboard')->with('success', 'Registrasi mandiri berhasil diselesaikan! Berkas Anda sedang ditinjau oleh operator.');
+            DB::transaction(function () use ($profilLama, $dataPeserta, $validated, $registrasiEksis) {
+                // A. Update data kompetensi di tabel utama
+                $profilLama->update($dataPeserta);
+
+                if ($registrasiEksis) {
+                    // B. JIKA SUDAH ADA: Hapus berkas fisik lama HANYA JIKA siswa mengupload berkas baru
+                    $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan'];
+
+                    foreach ($fileFields as $field) {
+                        // Jika di request form ada file baru, dan di DB lama ada file, hapus file lamanya
+                        if (array_key_exists($field, $validated) && $registrasiEksis->$field) {
+                            Storage::disk('public')->delete($registrasiEksis->$field);
+                        }
+                    }
+
+                    // C. Lakukan UPDATE pada data registrasi yang sudah ada (bukan membuat baru)
+                    $registrasiEksis->update($validated);
+                } else {
+                    // D. JIKA BELUM PERNAH ADA: Baru lakukan INSERT data baru
+                    RegistrasiPesertaDidik::create($validated);
+                }
+            });
+        } else {
+            return redirect()->route('siswa.dashboard')->with('error', 'Profil dasar Anda belum ditemukan. Silakan lengkapi Data Diri Anda terlebih dahulu.');
+        }
+
+        return redirect()->route('siswa.dashboard')->with('success', 'Data registrasi Anda berhasil dikirim dan sedang menunggu verifikasi ulang.');
     }
 }

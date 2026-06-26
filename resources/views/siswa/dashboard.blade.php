@@ -7,64 +7,81 @@
 @section('content')
 <div class="space-y-6">
 
-    <div>
-        @if($sudahRegistrasi)
-            @if($statusRegistrasi == 'disetujui')
-                <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-900 text-sm flex items-start gap-3 shadow-sm">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-emerald-900">Registrasi Disetujui!</h4>
-                        <p class="text-emerald-700/90 text-xs mt-0.5">Selamat, proses registrasi Anda telah diverifikasi oleh operator. Silakan periksa kembali data diri Anda.</p>
-                    </div>
-                </div>
-            @elseif($statusRegistrasi == 'ditolak')
-                <div class="p-4 rounded-2xl bg-rose-50 border border-rose-100 text-rose-900 text-sm flex items-start gap-3 shadow-sm">
-                    <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/20">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-rose-900">Registrasi Memerlukan Perbaikan</h4>
-                        <p class="text-rose-700/90 text-xs mt-0.5">Mohon maaf, terdapat data yang belum sesuai. Silakan edit kembali data diri Anda atau hubungi panitia.</p>
-                    </div>
-                </div>
-            @else
-                <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100 text-amber-900 text-sm flex items-start gap-3 shadow-sm">
-                    <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-amber-900">Menunggu Verifikasi</h4>
-                        <p class="text-amber-700/90 text-xs mt-0.5">Registrasi mandiri Anda telah diterima. Saat ini berkas Anda sedang dalam proses peninjauan oleh operator.</p>
-                    </div>
-                </div>
-            @endif
-        @else
-            <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-900 text-sm flex items-start gap-3 shadow-sm">
-                <div class="w-8 h-8 rounded-xl bg-indigo-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/20">
+<div>
+    @if($sudahRegistrasi)
+        @if($statusRegistrasi == 'Diterima')
+            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-900 text-sm flex items-start gap-3 shadow-sm mb-6">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <div class="flex-1 sm:flex sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h4 class="font-bold text-indigo-900">Anda Belum Mengisi Registrasi</h4>
-                        <p class="text-indigo-700/90 text-xs mt-0.5">Segera lengkapi formulir pendaftaran mandiri agar data Anda dapat diproses oleh sekolah.</p>
+                <div>
+                    <h4 class="font-bold text-emerald-900">Selamat! Registrasi Anda Diterima</h4>
+                    <p class="text-emerald-700/90 text-xs mt-0.5">Berkas pendaftaran Anda telah divalidasi dan dinyatakan memenuhi syarat oleh tim panitia SMK Negeri 1 Kawali.</p>
+                </div>
+            </div>
+
+        @elseif($statusRegistrasi == 'Ditolak')
+            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-100 text-rose-900 text-sm flex items-start gap-3 shadow-sm mb-6">
+                <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-rose-900">Registrasi Ditolak / Memerlukan Perbaikan</h4>
+                    <p class="text-rose-700/90 text-xs mt-0.5">Mohon maaf, peninjauan berkas Anda belum disetujui oleh verifikator sekolah.</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-rose-100 shadow-sm mb-6">
+                <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2 text-rose-700">
+                    ⚠️ Alasan Umum & Instruksi Perbaikan
+                </h3>
+                <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
+                    <p>Penolakan berkas biasanya terjadi karena:</p>
+                    <ul class="list-disc list-inside space-y-1 pl-1 text-slate-500">
+                        <li>Scan berkas dokumen (KK, SKL/Ijazah, Akta) buram atau terpotong.</li>
+                        <li>Ada ketidaksesuaian data antara form isian dengan berkas asli.</li>
+                    </ul>
+                    <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-4">
+                        <p class="text-[11px] text-slate-400">Silakan periksa kembali berkas Anda atau hubungi admin sekolah jika ada kekeliruan.</p>
+                        <a href="{{ route('registrasi.siswa') }}" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl transition shrink-0">
+                            Perbaiki Kesalahan
+                        </a>
                     </div>
-                    <a href="{{ route('registrasi.siswa') }}" class="inline-block mt-3 sm:mt-0 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition shrink-0 text-center">
-                        Mulai Registrasi
-                    </a>
+                </div>
+            </div>
+
+        @else
+            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-100 text-amber-900 text-sm flex items-start gap-3 shadow-sm mb-6">
+                <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-amber-900">Menunggu Verifikasi</h4>
+                    <p class="text-amber-700/90 text-xs mt-0.5">Registrasi mandiri Anda telah tersimpan. Saat ini berkas Anda sedang dalam proses pemeriksaan oleh tim verifikator sekolah.</p>
                 </div>
             </div>
         @endif
-    </div>
+    @else
+        <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-900 text-sm flex items-start gap-3 shadow-sm mb-6">
+            <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-indigo-600/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+            </div>
+            <div>
+                <h4 class="font-bold text-indigo-900">Formulir Registrasi Belum Lengkap</h4>
+                <p class="text-indigo-700/90 text-xs mt-0.5">Anda belum menyelesaikan pengisian kompetensi keahlian dan unggah berkas kelulusan.</p>
+                <a href="{{ route('registrasi.siswa') }}" class="inline-block mt-3 px-4 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 transition">Mulai Registrasi Sekarang</a>
+            </div>
+        </div>
+    @endif
+</div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         

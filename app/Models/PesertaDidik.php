@@ -19,7 +19,6 @@ class PesertaDidik extends Model
      */
     protected $fillable = [
         'created_by',
-        'nomor_pendaftaran',
         'user_id',
 
         // DATA PRIBADI
@@ -31,6 +30,8 @@ class PesertaDidik extends Model
         'tempat_lahir',
         'tanggal_lahir',
         'no_registrasi_akta',
+        'jalur_pendaftaran',
+        'kompetensi_keahlian',
         'agama',
         'kewarganegaraan',
         'negara_asal',
@@ -41,6 +42,8 @@ class PesertaDidik extends Model
         'dusun',
         'desa_kelurahan',
         'kecamatan',
+        'kabupaten',
+        'provinsi',
         'kode_pos',
         'lintang',
         'bujur',
@@ -129,6 +132,65 @@ class PesertaDidik extends Model
             'berat_badan' => 'float',
             'jarak_kilometer' => 'float',
         ];
+    }
+
+    public function isDataLengkap()
+    {
+        // Daftar semua kolom yang WAJIB diisi berdasarkan form validasi Anda
+        $kolomWajib = [
+            // Bagian I: Pribadi
+            'nama_lengkap',
+            'jenis_kelamin',
+            'nisn',
+            'nik',
+            'no_kk',
+            'tempat_lahir',
+            'tanggal_lahir',
+            'agama',
+            'kewarganegaraan',
+            'alamat',
+            'desa_kelurahan',
+            'kecamatan',
+            'kabupaten',
+            'provinsi',
+            'tempat_tinggal',
+            'moda_transportasi',
+            'anak_ke',
+
+            // Bagian II: Ayah
+            'nama_ayah',
+            'nik_ayah',
+            'tahun_lahir_ayah',
+            'pendidikan_ayah',
+            'pekerjaan_ayah',
+            'penghasilan_ayah',
+
+            // Bagian III: Ibu
+            'nama_ibu',
+            'nik_ibu',
+            'tahun_lahir_ibu',
+            'pendidikan_ibu',
+            'pekerjaan_ibu',
+            'penghasilan_ibu',
+
+            // Bagian V: Kontak & Periodik (sesuaikan jika ada yang boleh null)
+            'no_hp',
+            'email',
+            'tinggi_badan',
+            'berat_badan',
+            'jarak_sekolah',
+            'waktu_tempuh',
+            'jumlah_saudara'
+        ];
+
+        foreach ($kolomWajib as $kolom) {
+            // Jika ada satu saja kolom wajib yang kosong, langsung kembalikan false
+            if (is_null($this->$kolom) || trim($this->$kolom) === '') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /*

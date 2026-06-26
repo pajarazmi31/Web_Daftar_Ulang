@@ -14,7 +14,6 @@ class RegistrasiPesertaDidik extends Model
     protected $fillable = [
         'peserta_didik_id',
         'user_id',
-        'kompetensi_keahlian',
         'jenis_pendaftaran',
         'sekolah_asal',
         'pernah_paud',
@@ -26,8 +25,6 @@ class RegistrasiPesertaDidik extends Model
         'akta_kelahiran',
         'surat_keterangan_lulus',
         'kartu_kesejahteraan',
-        'sptjm',
-        'surat_pernyataan_tata_tertib',
     ];
 
     /**

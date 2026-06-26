@@ -17,28 +17,21 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'name' => 'Administrator',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
         ]);
 
         User::create([
             'role_id' => 2,
             'name' => 'Operator Sekolah',
             'email' => 'operator@gmail.com',
-            'password' => Hash::make('password'),
-        ]);
-
-        User::create([
-            'role_id' => 3,
-            'name' => 'Siswa',
-            'email' => 'siswa@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
         ]);
 
         User::create([
             'role_id' => 4,
             'name' => 'Kepala Sekolah',
             'email' => 'kepsek@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
         ]);
     }
 }

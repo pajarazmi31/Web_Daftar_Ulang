@@ -5,7 +5,21 @@
 @section('header_subtitle', 'Kelola berkas fisik, penetapan keahlian jurusan, dan verifikasi status siswa baru.')
 
 @section('content')
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+
+    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-500 shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                </svg>
+        </div>
+        <div>
+            <span class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Total Registrasi</span>
+            <span class="text-2xl font-bold text-indigo-600">{{ $totalRegistrasi ?? 0 }}</span>
+        </div>
+    </div>
 
     <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
         <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 shrink-0">
@@ -124,7 +138,7 @@
                         <div class="text-xs text-slate-400 mt-0.5">NISN: {{ $item->pesertadidik->nisn ?? '-' }}</div>
                     </td>
                     <td class="py-4 px-6">
-                        <span class="font-medium text-slate-700">{{ $item->kompetensi_keahlian ?? '-' }}</span>
+                        <span class="font-medium text-slate-700">{{ $item->pesertadidik->kompetensi_keahlian ?? '-' }}</span>
                     </td>
                     <td class="py-4 px-6">
                         {{-- Penyederhanaan Logika Warna Badge Status --}}
@@ -187,5 +201,42 @@
             </tbody>
         </table>
     </div>
+            @if($registrasis->hasPages())
+        <div class="px-6 py-4 bg-white border-t border-slate-100 flex items-center justify-between">
+            <div class="text-xs text-slate-500">
+                Menampilkan <span class="font-medium text-slate-800">{{ $registrasis->firstItem() }}</span> 
+                sampai <span class="font-medium text-slate-800">{{ $registrasis->lastItem() }}</span> 
+                dari <span class="font-medium text-slate-800">{{ $registrasis->total() }}</span> peserta
+            </div>
+
+            <div class="flex items-center gap-2">
+                {{-- Tombol Previous --}}
+                @if ($registrasis->onFirstPage())
+                    <span class="cursor-not-allowed opacity-40 inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg select-none">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                        Sebelumnya
+                    </span>
+                @else
+                    <a href="{{ $registrasis->previousPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg transition-colors duration-150">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                        Sebelumnya
+                    </a>
+                @endif
+
+                {{-- Status Halaman Aktif (Contoh: 1 / 12) --}}
+                <span class="text-xs font-medium text-slate-600 px-2">
+                    {{ $registrasis->currentPage() }} <span class="text-slate-300">/</span> {{ $registrasis->lastPage() }}
+                </span>
+
+                {{-- Tombol Next --}}
+                @if ($registrasis->hasMorePages())
+                    <a href="{{ $registrasis->nextPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg transition-colors duration-150">
+                        Selanjutnya
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                    </a>
+                @endif
+            </div>
+        </div>
+        @endif
 </div>
 @endsection

@@ -7,7 +7,7 @@ Profil Detail: {{ $siswa->nama_lengkap }}
 @endsection
 
 @section('header_subtitle')
-No. Pendaftaran: {{ $siswa->nomor_pendaftaran ?? 'Belum Terbit' }} | Status: {{ $siswa->status_registrasi ?? 'Draft' }}
+ Status: {{ $siswa->status_registrasi ?? 'Draft' }}
 @endsection
 
 @section('content')
@@ -345,7 +345,7 @@ No. Pendaftaran: {{ $siswa->nomor_pendaftaran ?? 'Belum Terbit' }} | Status: {{ 
         <div class="px-6 py-4 bg-slate-50/70 border-b border-slate-100">
             <h3 class="font-bold text-xs uppercase tracking-wider text-indigo-600">V. Berkas Lampiran Digital</h3>
         </div>
-        <div class="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+        <div class="p-6 grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
             @php
             $berkas = [
             ['label' => 'Kartu Keluarga (KK)', 'field' => $siswa->kk],
@@ -353,8 +353,6 @@ No. Pendaftaran: {{ $siswa->nomor_pendaftaran ?? 'Belum Terbit' }} | Status: {{ 
             ['label' => 'Akta Kelahiran', 'field' => $siswa->akta_kelahiran],
             ['label' => 'SKL / Ijazah', 'field' => $siswa->surat_keterangan_lulus],
             ['label' => 'Kartu Kesejahteraan', 'field' => $siswa->kartu_kesejahteraan],
-            ['label' => 'SPTJM', 'field' => $siswa->sptjm],
-            ['label' => 'Surat Pernyataan Tata Tertib', 'field' => $siswa->surat_pernyataan_tata_tertib],
             ];
             @endphp
 

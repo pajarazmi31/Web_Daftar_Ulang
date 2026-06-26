@@ -50,13 +50,34 @@
     </div>
 
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        <form action="{{ route('data-peserta.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 bg-white border border-slate-200 p-1.5 rounded-xl w-full sm:w-auto shadow-sm">
-            @csrf
-            <input type="file" name="file_excel" required class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer w-full sm:w-40">
-            <button type="submit" class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition font-medium whitespace-nowrap shadow-sm">
-                Import
-            </button>
-        </form>
+            @if (session()->has('error'))
+            <div class="p-4 mb-3 text-sm text-red-800 rounded-xl bg-red-50 border border-red-200" role="alert">
+                <span class="font-semibold">Gagal!</span> {{ session('error') }}
+            </div>
+            @endif
+
+            @if (session()->has('import_errors'))
+            <div class="p-4 mb-3 text-sm text-red-800 rounded-xl bg-red-50 border border-red-200">
+                <div class="font-semibold mb-2">Detail kesalahan input data Excel:</div>
+                <ul class="list-disc pl-5 space-y-1 max-h-48 overflow-y-auto">
+                    @foreach (session('import_errors') as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <p class="mt-2 text-xs text-red-600">*Silakan perbaiki baris-baris tersebut di file Excel Anda dan lakukan import ulang.</p>
+            </div>
+            @endif
+
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <form action="{{ route('data-peserta.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 bg-white border border-slate-200 p-1.5 rounded-xl w-full sm:w-auto shadow-sm">
+                    @csrf
+                    <input type="file" name="file" required class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer w-full sm:w-40">
+                    <button type="submit" class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition font-medium whitespace-nowrap shadow-sm">
+                        Import
+                    </button>
+                </form>
+            </div>
+        
 
         <a href="{{ route('data-peserta.template') }}" class="text-xs font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 px-3 py-2 rounded-xl transition inline-flex items-center justify-center gap-2 shadow-sm" title="Unduh template Excel kosong">
             <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -76,71 +97,107 @@
 
 <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
 
-<div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
-                    <th class="px-6 py-4 w-16 text-center">No</th>
-                    <th class="px-6 py-4">No. Pendaftaran / NISN</th>
-                    <th class="px-6 py-4">Nama Lengkap</th>
-                    <th class="px-6 py-4">Jenis Kelamin</th>
-                    <th class="px-6 py-4">Desa & Kecamatan</th>
-                    <th class="px-6 py-4 text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
-                @forelse($peserta ?? [] as $item)
-                <tr class="hover:bg-slate-50/50 transition">
-                    <td class="px-6 py-4 text-center text-slate-400 font-medium">{{ $loop->iteration }}</td>
-                    <td class="px-6 py-4">
-                        <div class="text-xs font-semibold text-indigo-600 font-mono">{{ $item->nomor_pendaftaran ?? 'Belum Generate' }}</div>
-                        <div class="text-xs text-slate-400 font-mono mt-0.5">NISN: {{ $item->nisn ?? '-' }}</div>
-                    </td>
-                    <td class="px-6 py-4 font-medium text-slate-800">{{ $item->nama_lengkap }}</td>
-                    <td class="px-6 py-4">
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium {{ $item->jenis_kelamin == 'Laki-laki' ? 'bg-blue-50 text-blue-700' : 'bg-pink-50 text-pink-700' }}">
-                            {{ $item->jenis_kelamin }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-slate-500">
-                        <div class="text-slate-700 font-medium">{{ $item->desa_kelurahan }}</div>
-                        <div class="text-xs text-slate-400">Kec. {{ $item->kecamatan }}</div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center justify-center gap-2">
-                            <a href="{{ route('data-peserta.detail', $item->id) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition inline-block" title="Lihat Detail Lengkap">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                            </a>
-
-                            <a href="{{ route('data-peserta.edit', $item->id) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Ubah Biodata">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                                </svg>
-                            </a>
-
-                            <form action="{{ route('data-peserta.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berkas pendaftaran {{ $item->nama_lengkap }}?');" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Hapus Data">
+    <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                        <th class="px-6 py-4 w-16 text-center">No</th>
+                        <th class="px-6 py-4">NISN</th>
+                        <th class="px-6 py-4">Nama Lengkap</th>
+                        <th class="px-6 py-4">Jenis Kelamin</th>
+                        <th class="px-6 py-4">Desa & Kecamatan</th>
+                        <th class="px-6 py-4 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
+                    @forelse($peserta ?? [] as $item)
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="px-6 py-4 text-center text-slate-400 font-medium">{{ $loop->iteration }}</td>
+                        <td class="px-6 py-4 font-mono text-slate-800">
+                            NISN:{{ $item->nisn ?? '-' }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-800">{{ $item->nama_lengkap }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium {{ $item->jenis_kelamin == 'Laki-laki' ? 'bg-blue-50 text-blue-700' : 'bg-pink-50 text-pink-700' }}">
+                                {{ $item->jenis_kelamin }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-500">
+                            <div class="text-slate-700 font-medium">{{ $item->desa_kelurahan }}</div>
+                            <div class="text-xs text-slate-400">Kec. {{ $item->kecamatan }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('data-peserta.detail', $item->id) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition inline-block" title="Lihat Detail Lengkap">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="text-center py-12 text-slate-400">Belum ada data siswa terdaftar.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                                </a>
+
+                                <a href="{{ route('data-peserta.edit', $item->id) }}" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Ubah Biodata">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                                    </svg>
+                                </a>
+
+                                <form action="{{ route('data-peserta.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus berkas pendaftaran {{ $item->nama_lengkap }}?');" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Hapus Data">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center py-12 text-slate-400">Belum ada data siswa terdaftar.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        @if($peserta->hasPages())
+        <div class="px-6 py-4 bg-white border-t border-slate-100 flex items-center justify-between">
+            <div class="text-xs text-slate-500">
+                Menampilkan <span class="font-medium text-slate-800">{{ $peserta->firstItem() }}</span> 
+                sampai <span class="font-medium text-slate-800">{{ $peserta->lastItem() }}</span> 
+                dari <span class="font-medium text-slate-800">{{ $peserta->total() }}</span> peserta
+            </div>
+
+            <div class="flex items-center gap-2">
+                {{-- Tombol Previous --}}
+                @if ($peserta->onFirstPage())
+                    <span class="cursor-not-allowed opacity-40 inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg select-none">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                        Sebelumnya
+                    </span>
+                @else
+                    <a href="{{ $peserta->previousPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg transition-colors duration-150">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                        Sebelumnya
+                    </a>
+                @endif
+
+                {{-- Status Halaman Aktif (Contoh: 1 / 12) --}}
+                <span class="text-xs font-medium text-slate-600 px-2">
+                    {{ $peserta->currentPage() }} <span class="text-slate-300">/</span> {{ $peserta->lastPage() }}
+                </span>
+
+                {{-- Tombol Next --}}
+                @if ($peserta->hasMorePages())
+                    <a href="{{ $peserta->nextPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg transition-colors duration-150">
+                        Selanjutnya
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                    </a>
+                @endif
+            </div>
+        </div>
+        @endif
     </div>
-</div>
-@endsection
+    @endsection

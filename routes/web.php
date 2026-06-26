@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\kepsek\LaporanController;
 use App\Http\Controllers\Siswa\SiswaController;
+use Illuminate\Support\Facades\DB;
 
 
 Route::get('/', [DashboardController::class, 'landingpage'])->name('landingpage');
@@ -29,7 +30,7 @@ Route::middleware('auth')->group(function () {
     // ==========================================
     Route::middleware('role:admin')->group(function () {
         Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('admin.dashboard');
-        
+
         // Manajemen Akun
         Route::get('/manajemen-akun', [UserController::class, 'index'])->name('manajemen_akun');
         Route::get('/manajemen-akun/tambah', [UserController::class, 'create'])->name('manajemen_akun.create');
@@ -58,7 +59,7 @@ Route::middleware('auth')->group(function () {
         Route::get('data-peserta/export-excel', [PesertaDidikController::class, 'exportExcel'])->name('data-peserta.export');
         Route::post('data-peserta/import-excel', [PesertaDidikController::class, 'importExcel'])->name('data-peserta.import');
         Route::get('data-peserta/download-template', [PesertaDidikController::class, 'downloadTemplate'])->name('data-peserta.template');
-        
+
         Route::get('/data-peserta/detail/{id}', [PesertaDidikController::class, 'show'])->name('data-peserta.detail');
         Route::get('/data-peserta/{id}/sunting', [PesertaDidikController::class, 'edit'])->name('data-peserta.edit');
         Route::put('/data-peserta/{id}/perbarui', [PesertaDidikController::class, 'update'])->name('data-peserta.update');
@@ -89,7 +90,7 @@ Route::middleware('auth')->group(function () {
     // ==========================================
     Route::middleware('role:siswa')->group(function () {
         Route::get('/dashboard/siswa', [SiswaController::class, 'index'])->name('siswa.dashboard');
-        
+
         // Route untuk mengelola data diri mandiri
         Route::get('/data-diri', [SiswaController::class, 'dataDiri'])->name('siswa.data-diri.index');
         Route::get('/data-diri/Edit', [SiswaController::class, 'editDataDiri'])->name('siswa.data-diri.edit');
@@ -98,5 +99,22 @@ Route::middleware('auth')->group(function () {
         // Route untuk registrasi mandiri
         Route::get('/registrasi/siswa', [SiswaController::class, 'registrasi'])->name('registrasi.siswa');
         Route::post('/registrasi/store', [SiswaController::class, 'storeRegistrasi'])->name('registrasi.siswa.store');
+    });
+
+    // Jalur Endpoint API Lokal Wilayah (100% Offline)
+    Route::get('/api-lokal/provinsi', function () {
+        return response()->json(DB::table('provinsis')->orderBy('nama', 'asc')->get());
+    });
+
+    Route::get('/api-lokal/kabupaten/{provinsi_id}', function ($provinsi_id) {
+        return response()->json(DB::table('kabupatens')->where('provinsi_id', $provinsi_id)->orderBy('nama', 'asc')->get());
+    });
+
+    Route::get('/api-lokal/kecamatan/{kabupaten_id}', function ($kabupaten_id) {
+        return response()->json(DB::table('kecamatans')->where('kabupaten_id', $kabupaten_id)->orderBy('nama', 'asc')->get());
+    });
+
+    Route::get('/api-lokal/desa/{kecamatan_id}', function ($kecamatan_id) {
+        return response()->json(DB::table('desas')->where('kecamatan_id', $kecamatan_id)->orderBy('nama', 'asc')->get());
     });
 });

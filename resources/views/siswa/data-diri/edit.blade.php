@@ -7,7 +7,8 @@
 @section('content')
 <div class="max-w-5xl mx-auto" x-data="{
     tab: '{{ old('tab', 'pribadi') }}',
-    kwn: '{{ old('kewarganegaraan', $peserta->kewarganegaraan ?? 'WNI') }}'
+    kwn: '{{ old('kewarganegaraan', $peserta->kewarganegaraan ?? 'WNI') }}',
+    tabs: ['pribadi', 'ayah', 'ibu', 'wali', 'kontak', 'beasiswa']  
 }">
 
     @if(!$peserta)
@@ -104,11 +105,54 @@
                     <label class="block text-slate-600 font-medium mb-1">8. No. Registrasi Akta Lahir</label>
                     <input type="text" name="no_registrasi_akta" value="{{ old('no_registrasi_akta', $peserta->no_registrasi_akta) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
+
                 <div>
                     <label class="block text-slate-600 font-medium mb-1">9. Agama & Kepercayaan</label>
                     <select name="agama" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Islam', 'Kristen Protestan', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu', 'Kepercayaan Kepada Tuhan YME'] as $agama)
                         <option value="{{ $agama }}" {{ old('agama', $peserta->agama) == $agama ? 'selected' : '' }}>{{ $agama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-slate-600 font-medium mb-1">Jalur Pendaftaran *</label>
+                    <select name="jalur_pendaftaran" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
+                        <option value="">-- Pilih Jalur Pendaftaran --</option>
+                        @foreach([
+                        'Mutasi Anak Guru',
+                        'Afirmasi KETM',
+                        'Proiritas Terdekat',
+                        'AKD Persiapan Kelas Industri',
+                        'Non AKD Kejuruan',
+                        'AKD Rapot',
+                        'Non AKD Kepemimpinan',
+                        'AKD Kejuruan'
+                        ] as $item)
+                        <option value="{{ $item }}" {{ old('jalur_pendaftaran', $peserta->jalur_pendaftaran ?? '') == $item ? 'selected' : '' }}>
+                            {{ $item }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-600 font-medium mb-1">Kompetensi Keahlian Jurusan *</label>
+                    <select name="kompetensi_keahlian" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
+                        <option value="">-- Pilih Kompetensi Keahlian --</option>
+                        @foreach([
+                        'Teknik Otomotif',
+                        'Teknik Jaringan Komputer dan Telekomunikasi',
+                        'Pengembangan Perangkat Lunak dan Gim',
+                        'Desain Pemodelan dan Informasi Bangunan',
+                        'Manajemen Perkantoran dan Layanan Bisnis',
+                        'Akuntansi dan Keuangan Lembaga',
+                        'Seni Pertunjukan'
+                        ] as $jurusan)
+                        <option value="{{ $jurusan }}" {{ old('kompetensi_keahlian', $peserta->kompetensi_keahlian ?? '') == $jurusan ? 'selected' : '' }}>
+                            {{ $jurusan }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -160,42 +204,74 @@
 
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">13. RT</label>
+                    <label class="block text-slate-600 font-medium mb-1">13. Provinsi <span class="text-red-500">*</span></label>
+                    <select id="provinsi" name="provinsi" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Pilih Provinsi</option>
+                        @if(!empty($peserta->provinsi))
+                        <option value="{{ $peserta->provinsi }}" selected>{{ $peserta->provinsi }}</option>
+                        @endif
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-600 font-medium mb-1">14. Kabupaten/Kota <span class="text-red-500">*</span></label>
+                    <select id="kabupaten" name="kabupaten" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500" {{ empty($peserta->kabupaten) ? 'disabled' : '' }}>
+                        <option value="">Pilih Kabupaten/Kota</option>
+                        @if(!empty($peserta->kabupaten))
+                        <option value="{{ $peserta->kabupaten }}" selected>{{ $peserta->kabupaten }}</option>
+                        @endif
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-600 font-medium mb-1">15. Kecamatan <span class="text-red-500">*</span></label>
+                    <select id="kecamatan" name="kecamatan" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500" {{ empty($peserta->kecamatan) ? 'disabled' : '' }}>
+                        <option value="">Pilih Kecamatan</option>
+                        @if(!empty($peserta->kecamatan))
+                        <option value="{{ $peserta->kecamatan }}" selected>{{ $peserta->kecamatan }}</option>
+                        @endif
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-600 font-medium mb-1">16. Desa / Kelurahan <span class="text-red-500">*</span></label>
+                    <select id="desa_kelurahan" name="desa_kelurahan" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500" {{ empty($peserta->desa_kelurahan) ? 'disabled' : '' }}>
+                        <option value="">Pilih Desa/Kelurahan</option>
+                        @if(!empty($peserta->desa_kelurahan))
+                        <option value="{{ $peserta->desa_kelurahan }}" selected>{{ $peserta->desa_kelurahan }}</option>
+                        @endif
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-600 font-medium mb-1">17. Nama Dusun / Kampung</label>
+                    <input type="text" name="dusun" value="{{ old('dusun', $peserta->dusun) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block text-slate-600 font-medium mb-1">18. RT</label>
                     <input type="text" name="rt" value="{{ old('rt', $peserta->rt) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">14. RW</label>
+                    <label class="block text-slate-600 font-medium mb-1">19. RW</label>
                     <input type="text" name="rw" value="{{ old('rw', $peserta->rw) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
+
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">15. Nama Dusun / Kampung</label>
-                    <input type="text" name="dusun" value="{{ old('dusun', $peserta->dusun) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
-                </div>
-                <div class="col-span-2 sm:col-span-1">
-                    <label class="block text-slate-600 font-medium mb-1">16. Kelurahan/Desa</label>
-                    <input type="text" name="desa_kelurahan" value="{{ old('desa_kelurahan', $peserta->desa_kelurahan) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
-                </div>
-                <div>
-                    <label class="block text-slate-600 font-medium mb-1">17. Kecamatan</label>
-                    <input type="text" name="kecamatan" value="{{ old('kecamatan', $peserta->kecamatan) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
-                </div>
-                <div>
-                    <label class="block text-slate-600 font-medium mb-1">18. Kode Pos</label>
+                    <label class="block text-slate-600 font-medium mb-1">20. Kode Pos</label>
                     <input type="text" name="kode_pos" value="{{ old('kode_pos', $peserta->kode_pos) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">19. Koordinat Lintang</label>
+                    <label class="block text-slate-600 font-medium mb-1">21. Koordinat Lintang</label>
                     <input type="text" name="lintang" value="{{ old('lintang', $peserta->lintang) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">20. Koordinat Bujur</label>
+                    <label class="block text-slate-600 font-medium mb-1">22. Koordinat Bujur</label>
                     <input type="text" name="bujur" value="{{ old('bujur', $peserta->bujur) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">21. Tempat Tinggal</label>
+                    <label class="block text-slate-600 font-medium mb-1">23. Tempat Tinggal</label>
                     <select name="tempat_tinggal" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Bersama Orang Tua', 'Wali', 'Kos', 'Asrama', 'Panti Asuhan'] as $tt)
                         <option value="{{ $tt }}" {{ old('tempat_tinggal', $peserta->tempat_tinggal) == $tt ? 'selected' : '' }}>{{ $tt }}</option>
@@ -203,7 +279,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">22. Moda Transportasi</label>
+                    <label class="block text-slate-600 font-medium mb-1">24. Moda Transportasi</label>
                     <select name="moda_transportasi" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Jalan Kaki', 'Kendaraan Pribadi', 'Kendaraan Umum', 'Jemputan Sekolah', 'Kereta Api', 'Ojek', 'Lainnya'] as $trans)
                         <option value="{{ $trans }}" {{ old('moda_transportasi', $peserta->moda_transportasi) == $trans ? 'selected' : '' }}>{{ $trans }}</option>
@@ -214,11 +290,11 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">23. Anak Keberapa (di KK)</label>
+                    <label class="block text-slate-600 font-medium mb-1">25. Anak Keberapa (di KK)</label>
                     <input type="number" name="anak_ke" value="{{ old('anak_ke', $peserta->anak_ke) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">24. Pekerjaan </label>
+                    <label class="block text-slate-600 font-medium mb-1">26. Pekerjaan </label>
                     <select name="pekerjaan_siswa" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Pekerjaan --</option>
                         @foreach(['Tidak Bekerja', 'Nelayan', 'Petani', 'Buruh', 'Lainnya'] as $pekerjaan_siswa)
@@ -229,13 +305,13 @@
                 <div class="flex items-center pt-5">
                     <label class="flex items-center gap-2 cursor-pointer select-none">
                         <input type="checkbox" name="punya_kip" value="1" {{ old('punya_kip', $peserta->punya_kip) == '1' ? 'checked' : '' }} class="w-4 h-4 rounded border-slate-300 text-indigo-600">
-                        <span class="text-slate-700 font-medium text-xs">25. Memiliki Kartu KIP fisik?</span>
+                        <span class="text-slate-700 font-medium text-xs">27. Memiliki Kartu KIP fisik?</span>
                     </label>
                 </div>
                 <div class="flex items-center pt-5">
                     <label class="flex items-center gap-2 cursor-pointer select-none">
                         <input type="checkbox" name="penerima_kip" value="1" {{ old('penerima_kip', $peserta->penerima_kip) == '1' ? 'checked' : '' }} class="w-4 h-4 rounded border-slate-300 text-indigo-600">
-                        <span class="text-slate-700 font-medium text-xs">26. Tetap menerima bantuan KIP?</span>
+                        <span class="text-slate-700 font-medium text-xs">28. Tetap menerima bantuan KIP?</span>
                     </label>
                 </div>
             </div>
@@ -293,7 +369,7 @@
                     <label class="block text-slate-600 font-medium mb-1">33. Berkebutuhan Khusus Ayah</label>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
                         @php $bka_saved = is_array($peserta->kebutuhan_khusus_ayah) ? $peserta->kebutuhan_khusus_ayah : json_decode($peserta->kebutuhan_khusus_ayah, true) ?? []; @endphp
-                        @foreach(['Tidak' => 'Tidak Ada', 'Netra' => 'A - Netra', 'Rungu' => 'B - Rungu', 'Grahita Ringan' => 'C - Grahita Ringan', 'Laras' => 'E - Laras', 'Wicara' => 'F - Wicara'] as $value => $label)
+                        @foreach(['Tidak', 'Netra (A)', 'Rungu (B)', 'Grahita Ringan (C)', 'Grahita Sedang (C1)', 'Daksa Ringan (D)', 'Daksa Sedang (D1)', 'Laras (E)', 'Wicara (F)', 'Tuna Ganda (G)', 'Hiperaktif (H)', 'Cerdas Istimewa (I)', 'Bakat Istimewa (J)', 'Kesulitan Belajar (K)', 'Indigo (L)', 'Autis (M)', 'Down Syndrome (N)', 'Lainnya'] as $value => $label)
                         <label class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-100/50 transition">
                             <input type="checkbox" name="kebutuhan_khusus_ayah[]" value="{{ $value }}"
                                 {{ (is_array(old('kebutuhan_khusus_ayah', $bka_saved)) && in_array($value, old('kebutuhan_khusus_ayah', $bka_saved))) ? 'checked' : '' }}
@@ -359,7 +435,7 @@
                     <label class="block text-slate-600 font-medium mb-1">40. Berkebutuhan Khusus Ibu</label>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
                         @php $bki_saved = is_array($peserta->kebutuhan_khusus_ibu) ? $peserta->kebutuhan_khusus_ibu : json_decode($peserta->kebutuhan_khusus_ibu, true) ?? []; @endphp
-                        @foreach(['Tidak' => 'Tidak Ada', 'Netra' => 'A - Netra', 'Rungu' => 'B - Rungu'] as $value => $label)
+                        @foreach(['Tidak', 'Netra (A)', 'Rungu (B)', 'Grahita Ringan (C)', 'Grahita Sedang (C1)', 'Daksa Ringan (D)', 'Daksa Sedang (D1)', 'Laras (E)', 'Wicara (F)', 'Tuna Ganda (G)', 'Hiperaktif (H)', 'Cerdas Istimewa (I)', 'Bakat Istimewa (J)', 'Kesulitan Belajar (K)', 'Indigo (L)', 'Autis (M)', 'Down Syndrome (N)', 'Lainnya'] as $value => $label)
                         <label class="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-100/50 transition">
                             <input type="checkbox" name="kebutuhan_khusus_ibu[]" value="{{ $value }}"
                                 {{ (is_array(old('kebutuhan_khusus_ibu', $bki_saved)) && in_array($value, old('kebutuhan_khusus_ibu', $bki_saved))) ? 'checked' : '' }}
@@ -477,7 +553,11 @@
                     <label class="block text-slate-600 font-medium mb-1">Jenis Kesejahteraan</label>
                     <select name="jenis_kesejahteraan" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Jenis Bantuan --</option>
-                        @foreach(['PKH', 'PIP', 'Kartu Perlindungan Sosial', 'Kartu Keluarga Sejahtera'] as $kes)
+                        @foreach(['PKH',
+                        'PIP',
+                        'Kartu Perlindungan Sosial',
+                        'Kartu Keluarga Sejahtera',
+                        'Kartu Kesehatan'] as $kes)
                         <option value="{{ $kes }}" {{ old('jenis_kesejahteraan', $peserta->jenis_kesejahteraan) == $kes ? 'selected' : '' }}>{{ $kes }}</option>
                         @endforeach
                     </select>
@@ -519,15 +599,162 @@
                     <input type="text" name="tahun_selesai_beasiswa" value="{{ old('tahun_selesai_beasiswa', $peserta->tahun_selesai_beasiswa) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
             </div>
+        </div>
+        <div class="flex justify-between items-center pt-6 mt-6 border-t border-slate-100">
+            <div>
+                <button type="button"
+                    x-show="tab !== tabs[0]"
+                    @click="tab = tabs[tabs.indexOf(tab) - 1]; window.scrollTo({top: 0, behavior: 'smooth'})"
+                    class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition shadow-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Kembali
+                </button>
+            </div>
 
-            <div class="flex justify-end pt-4 border-t border-slate-100 gap-3">
-                <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold shadow-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 transition">
-                    Simpan Perubahan Data Diri
+            <div class="flex items-center gap-3">
+                <button type="button"
+                    x-show="tab !== tabs[tabs.length - 1]"
+                    @click="tab = tabs[tabs.indexOf(tab) + 1]; window.scrollTo({top: 0, behavior: 'smooth'})"
+                    class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm transition shadow-sm flex items-center gap-2">
+                    Selanjutnya
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+
+                <button type="submit"
+                    x-show="tab === tabs[tabs.length - 1]"
+                    class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition shadow-md flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Simpan Rekam Data
                 </button>
             </div>
         </div>
-
     </form>
     @endif
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const provSelect = document.getElementById("provinsi");
+        const kabSelect = document.getElementById("kabupaten");
+        const kecSelect = document.getElementById("kecamatan");
+        const desaSelect = document.getElementById("desa_kelurahan");
+
+        // Ambil nilai lama dari database (disediakan oleh Blade)
+        const oldProv = "{{ $peserta->provinsi ?? '' }}";
+        const oldKab = "{{ $peserta->kabupaten ?? '' }}";
+        const oldKec = "{{ $peserta->kecamatan ?? '' }}";
+        const oldDesa = "{{ $peserta->desa_kelurahan ?? '' }}";
+
+        // 1. Ambil Semua Provinsi
+        fetch("https://ibnux.github.io/data-indonesia/provinsi.json")
+            .then(res => res.json())
+            .then(data => {
+                provSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
+                data.forEach(prov => {
+                    const selected = (prov.nama === oldProv) ? 'selected' : '';
+                    provSelect.innerHTML += `<option value="${prov.nama}" data-id="${prov.id}" ${selected}>${prov.nama}</option>`;
+                });
+
+                // Jika ada data provinsi lama, otomatis panggil Kabupaten
+                const activeProvId = provSelect.options[provSelect.selectedIndex]?.dataset.id;
+                if (activeProvId) {
+                    loadRegencies(activeProvId, oldKab);
+                }
+            });
+
+        // 2. Fungsi Ambil Kabupaten
+        function loadRegencies(provId, selectedValue = '') {
+            fetch(`https://ibnux.github.io/data-indonesia/kabupaten/${provId}.json`)
+                .then(res => res.json())
+                .then(data => {
+                    kabSelect.innerHTML = '<option value="">Pilih Kabupaten/Kota</option>';
+                    data.forEach(kab => {
+                        const selected = (kab.nama === selectedValue) ? 'selected' : '';
+                        kabSelect.innerHTML += `<option value="${kab.nama}" data-id="${kab.id}" ${selected}>${kab.nama}</option>`;
+                    });
+                    kabSelect.disabled = false;
+
+                    // PERBAIKAN: Jalankan Kecamatan HANYA SETELAH Kabupaten selesai di-render
+                    const activeKabId = kabSelect.options[kabSelect.selectedIndex]?.dataset.id;
+                    if (activeKabId) {
+                        loadDistricts(activeKabId, oldKec);
+                    }
+                });
+        }
+
+        // 3. Fungsi Ambil Kecamatan
+        function loadDistricts(kabId, selectedValue = '') {
+            fetch(`https://ibnux.github.io/data-indonesia/kecamatan/${kabId}.json`)
+                .then(res => res.json())
+                .then(data => {
+                    kecSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                    data.forEach(kec => {
+                        // PERBAIKAN: Gunakan kec.nama (bukan kec.name)
+                        const selected = (kec.nama === selectedValue) ? 'selected' : '';
+                        kecSelect.innerHTML += `<option value="${kec.nama}" data-id="${kec.id}" ${selected}>${kec.nama}</option>`;
+                    });
+                    kecSelect.disabled = false;
+
+                    // PERBAIKAN: Jalankan Desa HANYA SETELAH Kecamatan selesai di-render
+                    const activeKecId = kecSelect.options[kecSelect.selectedIndex]?.dataset.id;
+                    if (activeKecId) {
+                        loadVillages(activeKecId, oldDesa);
+                    }
+                });
+        }
+
+        // 4. Fungsi Ambil Desa / Kelurahan
+        function loadVillages(kecId, selectedValue = '') {
+            fetch(`https://ibnux.github.io/data-indonesia/kelurahan/${kecId}.json`)
+                .then(res => res.json())
+                .then(data => {
+                    desaSelect.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
+                    data.forEach(desa => {
+                        // PERBAIKAN: Gunakan desa.nama (bukan desa.name)
+                        const selected = (desa.nama === selectedValue) ? 'selected' : '';
+                        desaSelect.innerHTML += `<option value="${desa.nama}" data-id="${desa.id}" ${selected}>${desa.nama}</option>`;
+                    });
+                    desaSelect.disabled = false;
+                });
+        }
+
+        // ==========================================
+        // LISTENER EVENT UNTUK PERUBAHAN MANUAL USER
+        // ==========================================
+        provSelect.addEventListener("change", function() {
+            kabSelect.innerHTML = '<option value=\"\">Pilih Kabupaten/Kota</option>';
+            kecSelect.innerHTML = '<option value=\"\">Pilih Kecamatan</option>';
+            desaSelect.innerHTML = '<option value=\"\">Pilih Desa/Kelurahan</option>';
+            kabSelect.disabled = true;
+            kecSelect.disabled = true;
+            desaSelect.disabled = true;
+
+            const provId = provSelect.options[provSelect.selectedIndex]?.dataset.id;
+            if (provId) loadRegencies(provId);
+        });
+
+        kabSelect.addEventListener("change", function() {
+            kecSelect.innerHTML = '<option value=\"\">Pilih Kecamatan</option>';
+            desaSelect.innerHTML = '<option value=\"\">Pilih Desa/Kelurahan</option>';
+            kecSelect.disabled = true;
+            desaSelect.disabled = true;
+
+            const kabId = kabSelect.options[kabSelect.selectedIndex]?.dataset.id;
+            if (kabId) loadDistricts(kabId);
+        });
+
+        kecSelect.addEventListener("change", function() {
+            desaSelect.innerHTML = '<option value=\"\">Pilih Desa/Kelurahan</option>';
+            desaSelect.disabled = true;
+
+            const kecId = kecSelect.options[kecSelect.selectedIndex]?.dataset.id;
+            if (kecId) loadVillages(kecId);
+        });
+    });
+</script>
 @endsection

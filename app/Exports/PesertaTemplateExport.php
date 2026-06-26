@@ -30,18 +30,18 @@ class PesertaTemplateExport implements FromArray, WithHeadings, WithTitle
     public function headings(): array
     {
         return [
-            // I. INFORMASI PENDAFTARAN
-            'Nomor Pendaftaran',
             
             // II. DATA PRIBADI SISWA
             'Nama Lengkap',
             'Jenis Kelamin',
             'NISN',
             'NIK',
-            'No KK', // Diubah dari 'No. KK' agar lebih aman
+            'No. KK',
             'Tempat Lahir',
             'Tanggal Lahir',
-            'No Registrasi Akta',
+            'No. Registrasi Akta',
+            'Kompetensi Keahlian',
+            'Jalur Pendaftaran',
             'Agama',
             'Kewarganegaraan',
             'Negara Asal',
@@ -52,8 +52,10 @@ class PesertaTemplateExport implements FromArray, WithHeadings, WithTitle
             'RT',
             'RW',
             'Dusun',
-            'Desa Kelurahan',
+            'Desa/Kelurahan',
             'Kecamatan',
+            'Kabupaten',
+            'Provinsi',
             'Kode Pos',
             'Lintang',
             'Bujur',
@@ -65,11 +67,11 @@ class PesertaTemplateExport implements FromArray, WithHeadings, WithTitle
             'Pekerjaan Siswa',
             'Punya KIP',
             'Penerima KIP',
-            'Tinggi Badan CM',     // Diubah dari 'Tinggi Badan (cm)'
-            'Berat Badan KG',      // Diubah dari 'Berat Badan (kg)'
+            'Tinggi Badan (cm)',
+            'Berat Badan (kg)',
             'Jarak Sekolah',
-            'Jarak Detail KM',     // Diubah dari 'Jarak Detail (km)'
-            'Waktu Tempuh Menit',  // Diubah dari 'Waktu Tempuh (menit)'
+            'Jarak Detail (km)',
+            'Waktu Tempuh (menit)',
             'Jumlah Saudara',
             
             // V. DATA ORANG TUA (AYAH)
@@ -90,7 +92,7 @@ class PesertaTemplateExport implements FromArray, WithHeadings, WithTitle
             'Penghasilan Ibu',
             'Kebutuhan Khusus Ibu',
             
-            // VII. DATA WALI
+            // VII. DATA WALI (JIKA ADA)
             'Nama Wali',
             'NIK Wali',
             'Tahun Lahir Wali',
@@ -99,8 +101,8 @@ class PesertaTemplateExport implements FromArray, WithHeadings, WithTitle
             'Penghasilan Wali',
             
             // VIII. KONTAK
-            'No HP Orang Tua',
-            'No HP Siswa',
+            'No. HP Orang Tua',
+            'No. HP Siswa',
             'Email',
             
             // IX. BEASISWA & KESEJAHTERAAN

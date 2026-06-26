@@ -20,25 +20,24 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->foreignId('user_id')
-                  ->nullable()
-                  ->constrained('users')
-                  ->cascadeOnDelete();
-
-            $table->string('nomor_pendaftaran')->unique()->nullable();
+                ->nullable()
+                ->constrained('users')
+                ->cascadeOnDelete();
 
             // DATA PRIBADI
             $table->string('nama_lengkap');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
 
             $table->string('nisn', 20)->nullable();
-            $table->string('nik', 20);
-            $table->string('no_kk', 20);
+            $table->string('nik', 20)->nullable();;
+            $table->string('no_kk', 20)->nullable();;
 
-            $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
+            $table->string('tempat_lahir')->nullable();;
+            $table->date('tanggal_lahir')->nullable();;
 
             $table->string('no_registrasi_akta')->nullable();
-
+            $table->string('jalur_pendaftaran')->nullable();
+            $table->string('kompetensi_keahlian')->nullable();
             $table->enum('agama', [
                 'Islam',
                 'Kristen Protestan',
@@ -47,7 +46,7 @@ return new class extends Migration
                 'Buddha',
                 'Khonghucu',
                 'Kepercayaan Kepada Tuhan YME'
-            ]);
+            ])->nullable();;
             $table->enum('kewarganegaraan', [
                 'WNI',
                 'WNA'
@@ -56,14 +55,16 @@ return new class extends Migration
 
             $table->text('berkebutuhan_khusus')->nullable();
 
-            $table->text('alamat');
+            $table->text('alamat')->nullable();;
 
             $table->string('rt', 5)->nullable();
             $table->string('rw', 5)->nullable();
 
             $table->string('dusun')->nullable();
-            $table->string('desa_kelurahan');
-            $table->string('kecamatan');
+            $table->string('desa_kelurahan')->nullable();
+            $table->string('kecamatan')->nullable();
+            $table->string('kabupaten')->nullable();
+            $table->string('provinsi')->nullable();
             $table->string('kode_pos')->nullable();
 
             $table->string('lintang')->nullable();

@@ -115,8 +115,40 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
         </div>
 
         @if($laporanData->hasPages())
-        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/30">
-            {{ $laporanData->links() }}
+        <div class="px-6 py-4 bg-white border-t border-slate-100 flex items-center justify-between">
+            <div class="text-xs text-slate-500">
+                Menampilkan <span class="font-medium text-slate-800">{{ $laporanData->firstItem() }}</span> 
+                sampai <span class="font-medium text-slate-800">{{ $laporanData->lastItem() }}</span> 
+                dari <span class="font-medium text-slate-800">{{ $laporanData->total() }}</span> peserta
+            </div>
+
+            <div class="flex items-center gap-2">
+                {{-- Tombol Previous --}}
+                @if ($laporanData->onFirstPage())
+                    <span class="cursor-not-allowed opacity-40 inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg select-none">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                        Sebelumnya
+                    </span>
+                @else
+                    <a href="{{ $laporanData->previousPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg transition-colors duration-150">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                        Sebelumnya
+                    </a>
+                @endif
+
+                {{-- Status Halaman Aktif (Contoh: 1 / 12) --}}
+                <span class="text-xs font-medium text-slate-600 px-2">
+                    {{ $laporanData->currentPage() }} <span class="text-slate-300">/</span> {{ $laporanData->lastPage() }}
+                </span>
+
+                {{-- Tombol Next --}}
+                @if ($laporanData->hasMorePages())
+                    <a href="{{ $laporanData->nextPageUrl() }}" class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg transition-colors duration-150">
+                        Selanjutnya
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                    </a>
+                @endif
+            </div>
         </div>
         @endif
     </div>

@@ -13,10 +13,11 @@ use App\Exports\PesertaTemplateExport;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class PesertaDidikController extends Controller
 {
-public function index(Request $request)
+    public function index(Request $request)
     {
         // Tangkap input keyword pencarian
         $search = $request->input('search');
@@ -26,13 +27,11 @@ public function index(Request $request)
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('nama_lengkap', 'like', "%{$search}%")
-                      ->orWhere('nisn', 'like', "%{$search}%")
-                      ->orWhere('nomor_pendaftaran', 'like', "%{$search}%"); 
-                      // Opsional: Ditambahkan nomor_pendaftaran jika ingin dicari juga
+                        ->orWhere('nisn', 'like', "%{$search}%");
                 });
             })
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('admin.data_peserta.index', compact('peserta'));
     }
@@ -45,14 +44,40 @@ public function index(Request $request)
     public function importExcel(Request $request)
     {
         $request->validate([
-            'file_excel' => 'required|mimes:xlsx,xls,csv|max:4096'
+            'file' => 'required|mimes:xlsx,xls,csv|max:2048'
         ]);
 
         try {
-            Excel::import(new PesertaImport, $request->file('file_excel'));
-            return redirect()->back()->with('success', 'Data peserta didik berhasil di-import!');
+            // Menggunakan DB Transaction untuk keamanan pembuatan massal User & PesertaDidik
+            DB::transaction(function () use ($request) {
+                Excel::import(new PesertaImport, $request->file('file'));
+            });
+
+            return redirect()->route('data-peserta.index')
+                ->with('success', 'Data peserta didik dan akun siswa berhasil diimport.');
+        } catch (ValidationException $e) {
+            // Jika terjadi kesalahan validasi pada isi file Excel
+            $failures = $e->failures();
+            $errorMessages = [];
+
+            foreach ($failures as $failure) {
+                // $failure->row() = Baris ke berapa di Excel yang error
+                // $failure->attribute() = Nama kolom/field yang error
+                // $failure->errors() = Array pesan kesalahannya
+                $row = $failure->row();
+                $errors = implode(', ', $failure->errors());
+
+                $errorMessages[] = "Baris {$row}: {$errors}";
+            }
+
+            // Kembalikan ke halaman sebelumnya dengan membawa daftar error dalam bentuk array
+            return redirect()->back()
+                ->with('import_errors', $errorMessages)
+                ->with('error', 'Import gagal karena terdapat data yang tidak valid pada file Excel.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal meng-import data. Periksa kembali format file Anda.');
+            // Jika terjadi kesalahan sistem lainnya (misal: database down, file rusak, dll)
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan sistem saat import data: ' . $e->getMessage());
         }
     }
 
@@ -73,22 +98,26 @@ public function index(Request $request)
             // TAB 1: Data Pribadi Siswa
             'nama_lengkap'          => 'required|string|max:255',
             'jenis_kelamin'         => 'required|in:Laki-laki,Perempuan',
-            'nisn'                  => 'nullable|string|max:10',
+            'nisn'                  => 'required|string|max:10',
             'nik'                   => 'required|string|max:16',
             'no_kk'                 => 'required|string|max:16',
             'tempat_lahir'          => 'required|string|max:255',
             'tanggal_lahir'         => 'required|date',
             'no_registrasi_akta'    => 'nullable|string|max:255',
+            'jalur_pendaftaran'     => 'required|string|max:255',
+            'kompetensi_keahlian'   => 'required|string|max:255',
             'agama'                 => 'required|in:Islam,Kristen Protestan,Katolik,Hindu,Buddha,Khonghucu,Kepercayaan Kepada Tuhan YME',
-            'kewarganegaraan'       => 'required|in:WNI,WNA',
+            'kewarganegaraan'       => 'nullable|in:WNI,WNA',
             'negara_asal'           => 'nullable|required_if:kewarganegaraan,WNA|string|max:255',
             'berkebutuhan_khusus'   => 'nullable|array',
-            'alamat'                => 'required|string',
+            'alamat'                => 'nullable|string',
             'rt'                    => 'nullable|string|max:5',
             'rw'                    => 'nullable|string|max:5',
             'dusun'                 => 'nullable|string|max:255',
-            'desa_kelurahan'        => 'required|string|max:255',
-            'kecamatan'             => 'required|string|max:255',
+            'desa_kelurahan'        => 'nullable|string|max:255',
+            'kecamatan'             => 'nullable|string|max:255',
+            'kabupaten'             => 'nullable|string|max:255',
+            'provinsi'             => 'nullable|string|max:255',
             'kode_pos'              => 'nullable|string|max:10',
             'lintang'               => 'nullable|string|max:50',
             'bujur'                 => 'nullable|string|max:50',
@@ -146,11 +175,15 @@ public function index(Request $request)
             'jenis_kesejahteraan'       => 'nullable|string|max:255',
             'nomor_kartu_kesejahteraan' => 'nullable|string|max:50',
             'nama_pemegang_kartu'       => 'nullable|string|max:255',
+        ], [
+            // Kustomisasi pesan error ke Bahasa Indonesia
+            'required' => 'Kolom ini wajib diisi.',
+            'digits'   => 'Harus berupa :digits digit angka.',
+            'date'     => 'Format tanggal tidak valid.',
         ]);
 
         // 2. MODIFIKASI DATA KHUSUS
         $validated['created_by'] = auth()->id();
-        $validated['nomor_pendaftaran'] = 'REG-' . date('Ymd') . '-' . strtoupper(Str::random(5));
 
         $validated['punya_kip'] = $request->has('punya_kip');
         $validated['penerima_kip'] = $request->has('penerima_kip');
@@ -211,22 +244,26 @@ public function index(Request $request)
             // TAB 1
             'nama_lengkap'          => 'required|string|max:255',
             'jenis_kelamin'         => 'required|in:Laki-laki,Perempuan',
-            'nisn'                  => 'nullable|string|max:10',
+            'nisn'                  => 'required|string|max:10',
             'nik'                   => 'required|string|max:16',
             'no_kk'                 => 'required|string|max:16',
             'tempat_lahir'          => 'required|string|max:255',
             'tanggal_lahir'         => 'required|date',
             'no_registrasi_akta'    => 'nullable|string|max:255',
+            'jalur_pendaftaran'     => 'required|string|max:255',
+            'kompetensi_keahlian'   => 'required|string|max:255',
             'agama'                 => 'required|in:Islam,Kristen Protestan,Katolik,Hindu,Buddha,Khonghucu,Kepercayaan Kepada Tuhan YME',
-            'kewarganegaraan'       => 'required|in:WNI,WNA',
+            'kewarganegaraan'       => 'nullable|in:WNI,WNA',
             'negara_asal'           => 'nullable|required_if:kewarganegaraan,WNA|string|max:255',
             'berkebutuhan_khusus'   => 'nullable|array',
-            'alamat'                => 'required|string',
+            'alamat'                => 'nullable|string',
             'rt'                    => 'nullable|string|max:5',
             'rw'                    => 'nullable|string|max:5',
             'dusun'                 => 'nullable|string|max:255',
-            'desa_kelurahan'        => 'required|string|max:255',
-            'kecamatan'             => 'required|string|max:255',
+            'desa_kelurahan'        => 'nullable|string|max:255',
+            'kecamatan'             => 'nullable|string|max:255',
+            'kabupaten'             => 'nullable|string|max:255',
+            'provinsi'             => 'nullable|string|max:255',
             'kode_pos'              => 'nullable|string|max:10',
             'lintang'               => 'nullable|string|max:50',
             'bujur'                 => 'nullable|string|max:50',

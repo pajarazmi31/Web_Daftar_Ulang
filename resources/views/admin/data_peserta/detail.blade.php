@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto" x-data="{ activeTab: 'pribadi' }">
-    
+
     <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">
@@ -15,7 +15,6 @@
             <div>
                 <h3 class="font-bold text-lg text-slate-900 leading-tight">{{ $peserta->nama_lengkap }}</h3>
                 <p class="text-xs text-slate-400 font-medium mt-1">
-                    No. Pendaftaran: <span class="text-indigo-600 font-semibold">{{ $peserta->nomor_pendaftaran ?? '-' }}</span> &bull; 
                     NISN: <span class="text-slate-700 font-mono font-semibold">{{ $peserta->nisn }}</span>
                 </p>
             </div>
@@ -33,24 +32,30 @@
         </div>
     </div>
 
-    <div class="flex border-b border-slate-200 overflow-x-auto mb-6 bg-white rounded-xl p-1.5 shadow-sm min-w-max">
-        <button type="button" @click="activeTab = 'pribadi'" :class="activeTab === 'pribadi' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+    <div class="flex border-b border-slate-200 overflow-x-auto mb-6 bg-white rounded-xl p-1.5 shadow-sm w-full whitespace-nowrap scrollbar-none">
+        <button type="button" @click="activeTab = 'pribadi'"
+            :class="activeTab === 'pribadi' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             1. Data Pribadi
         </button>
-        <button type="button" @click="activeTab = 'periodik'" :class="activeTab === 'periodik' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+        <button type="button" @click="activeTab = 'periodik'"
+            :class="activeTab === 'periodik' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             2. Periodik & Beasiswa
         </button>
-        <button type="button" @click="activeTab = 'ortu'" :class="activeTab === 'ortu' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+        <button type="button" @click="activeTab = 'ortu'"
+            :class="activeTab === 'ortu' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             3. Orang Tua & Wali
         </button>
     </div>
 
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-6">
-        
+
         <div x-show="activeTab === 'pribadi'" class="space-y-6">
             <div>
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Identitas Dasar Siswa</h4>
-                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-4 text-sm mt-3">
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Nama Lengkap</span>
                         <span class="font-semibold text-slate-800">{{ $peserta->nama_lengkap }}</span>
@@ -66,6 +71,22 @@
                     <div>
                         <span class="block text-xs font-medium text-slate-400">NIK / No. Identitas</span>
                         <span class="font-semibold text-slate-800 font-mono">{{ $peserta->nik }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-medium text-slate-400">No. KK</span>
+                        <span class="font-semibold text-slate-800 font-mono">{{ $peserta->no_kk }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-medium text-slate-400">No. Registrasi Akta</span>
+                        <span class="font-semibold text-slate-800 font-mono">{{ $peserta->no_registrasi_akta }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-medium text-slate-400">Kompetensi Keahlian Jurusan</span>
+                        <span class="text-sm font-semibold text-slate-700">{{ $peserta->kompetensi_keahlian ?? '-' }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-medium text-slate-400">Jalur Pendaftaran</span>
+                        <span class="text-sm font-semibold text-slate-700">{{ $peserta->jalur_pendaftaran }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Tempat, Tanggal Lahir</span>
@@ -90,10 +111,10 @@
 
             <div class="pt-2">
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Alamat Tempat Tinggal</h4>
-                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mt-3">
-                    <div class="sm:col-span-2">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mt-3">
+                    <div>
                         <span class="block text-xs font-medium text-slate-400">Alamat Jalan</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->alamat_jalan ?? '-' }}</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->alamat ?? '-' }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">RT / RW</span>
@@ -101,15 +122,15 @@
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Dusun / Kelurahan</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->nama_dusun ?? '-' }} / {{ $peserta->kelurahan ?? '-' }}</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->dusun ?? '-' }} / {{ $peserta->desa_kelurahan ?? '-' }}</span>
                     </div>
                     <div>
-                        <span class="block text-xs font-medium text-slate-400">Kecamatan</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->kecamatan }}</span>
+                        <span class="block text-xs font-medium text-slate-400">Kecamatan / Kode Pos</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->kecamatan }} / {{ $peserta->kode_pos ?? '-' }}</span>
                     </div>
                     <div>
-                        <span class="block text-xs font-medium text-slate-400">Kode Pos</span>
-                        <span class="font-semibold text-slate-800 font-mono">{{ $peserta->kode_pos ?? '-' }}</span>
+                        <span class="block text-xs font-medium text-slate-400">Kabupaten / Provinsi</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->kabupaten }} / {{ $peserta->provinsi ?? '-' }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Tempat Tinggal</span>
@@ -136,54 +157,50 @@
                         <span class="font-semibold text-slate-800">{{ $peserta->berat_badan ?? '-' }} kg</span>
                     </div>
                     <div>
-                        <span class="block text-xs font-medium text-slate-400">Lingkar Kepala</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->lingkar_kepala ?? '-' }} cm</span>
-                    </div>
-                    <div>
                         <span class="block text-xs font-medium text-slate-400">Jml. Saudara Kandung</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->jumlah_saudara_kandung ?? '0' }} orang</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->jumlah_saudara ?? '0' }} orang</span>
                     </div>
                 </div>
             </div>
 
             <div class="pt-2">
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Jarak & Waktu Tempuh Ke Sekolah</h4>
-                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mt-3">
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Kategori Jarak</span>
                         <span class="font-semibold text-slate-800">{{ $peserta->jarak_sekolah ?? '-' }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Detail Jarak (Km)</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->detail_jarak_sekolah ?? '0' }} km</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->jarak_kilometer ?? '0' }} km</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Waktu Tempuh Ke Sekolah</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->waktu_tempuh_menit ?? '0' }} Menit</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->waktu_tempuh ?? '0' }} Menit</span>
                     </div>
                 </div>
             </div>
 
             <div class="pt-2">
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Kartu Kesejahteraan & Jaminan Sosial</h4>
-                <div class="grid sm:grid-cols-2 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 text-sm mt-3">
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Penerima KPS / KIP / PKH</span>
-                        <span class="font-semibold text-slate-800">{{ $peserta->penerima_kps ?? 'Tidak' }}</span>
+                        <span class="font-semibold text-slate-800">{{ $peserta->jenis_kesejahteraan ?? 'Tidak' }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Nomor Kartu KPS / KIP</span>
-                        <span class="font-semibold text-slate-800 font-mono">{{ $peserta->no_kps ?? 'Tidak Ada' }}</span>
+                        <span class="font-semibold text-slate-800 font-mono">{{ $peserta->nomor_kartu_kesejahteraan ?? 'Tidak Ada' }}</span>
                     </div>
                 </div>
             </div>
 
             <div class="pt-2">
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Informasi Kepemilikan Beasiswa</h4>
-                <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
                     <div class="sm:col-span-2">
                         <span class="block text-xs font-medium text-slate-400">Jenis Beasiswa</span>
-                        <span class="font-semibold text-indigo-600 text-base">{{ $peserta->jenis_beasiswa ?? 'Tidak Mengajukan / Tidak Ada' }}</span>
+                        <span class="font-semibold text-slate-600 text-base">{{ $peserta->jenis_beasiswa ?? 'Tidak Mengajukan / Tidak Ada' }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Tahun Mulai</span>
@@ -204,7 +221,7 @@
         <div x-show="activeTab === 'ortu'" class="space-y-6">
             <div>
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Data Ayah Kandung</h4>
-                <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
                     <div class="sm:col-span-2">
                         <span class="block text-xs font-medium text-slate-400">Nama Lengkap Ayah</span>
                         <span class="font-semibold text-slate-800">{{ $peserta->nama_ayah }}</span>
@@ -234,7 +251,7 @@
 
             <div class="pt-2">
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Data Ibu Kandung</h4>
-                <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-3">
                     <div class="sm:col-span-2">
                         <span class="block text-xs font-medium text-slate-400">Nama Lengkap Ibu</span>
                         <span class="font-semibold text-slate-800">{{ $peserta->nama_ibu }}</span>
@@ -264,7 +281,7 @@
 
             <div class="pt-2">
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Data Wali (Jika Ada)</h4>
-                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm mt-3">
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Nama Lengkap Wali</span>
                         <span class="font-semibold text-slate-800">{{ $peserta->nama_wali ?? 'Tidak Menggunakan Wali' }}</span>
@@ -282,7 +299,7 @@
 
             <div class="pt-2">
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Kontak & Log Sistem</h4>
-                <div class="grid sm:grid-cols-2 gap-4 text-sm mt-3">
+                <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 text-sm mt-3">
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Nomor HP / WhatsApp</span>
                         <span class="font-semibold text-slate-800 text-indigo-600 font-mono text-base">{{ $peserta->no_hp ?? '-' }}</span>
@@ -291,7 +308,7 @@
                         <span class="block text-xs font-medium text-slate-400">Email Aktif</span>
                         <span class="font-semibold text-slate-800 font-mono">{{ $peserta->email ?? '-' }}</span>
                     </div>
-                    <div class="sm:col-span-2 border-t border-slate-100 pt-4 text-xs text-slate-400 font-medium">
+                    <div class="col-span-2 border-t border-slate-100 pt-4 text-xs text-slate-400 font-medium">
                         Keterangan Input: Berkas ini ditambahkan oleh <span class="text-slate-600 font-bold">{{ $peserta->creator->name ?? 'Sistem' }}</span> pada tanggal <span class="text-slate-600 font-semibold">{{ $peserta->created_at->translatedFormat('d F Y (H:i)') }}</span>.
                     </div>
                 </div>

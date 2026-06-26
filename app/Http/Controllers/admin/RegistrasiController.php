@@ -5,57 +5,60 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\RegistrasiPesertaDidik;
 use App\Models\PesertaDidik;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class RegistrasiController extends Controller
 {
-public function index(Request $request)
-{
-    // 1. Ambil input pencarian dan filter
-    $search  = $request->input('search');
-    $jurusan = $request->input('jurusan');
-    $status  = $request->input('status');
+    public function index(Request $request)
+    {
+        // 1. Ambil input pencarian dan filter
+        $search  = $request->input('search');
+        $jurusan = $request->input('jurusan');
+        $status  = $request->input('status');
 
-    // 2. Query Utama dengan Eager Loading + Filter Dinamis
-    $registrasis = RegistrasiPesertaDidik::with('pesertaDidik')
-        // Filter Pencarian (Nama, NISN, Sekolah Asal)
-        ->when($search, function ($query, $search) {
-            return $query->where(function ($q) use ($search) {
-                $q->where('sekolah_asal', 'like', "%{$search}%")
-                  ->orWhereHas('pesertaDidik', function ($pesertaQuery) use ($search) {
-                      $pesertaQuery->where('nama_lengkap', 'like', "%{$search}%")
-                                   ->orWhere('nisn', 'like', "%{$search}%");
-                  });
-            });
-        })
-        // Filter Jurusan / Kompetensi Keahlian
-        ->when($jurusan, function ($query, $jurusan) {
-            return $query->where('kompetensi_keahlian', $jurusan);
-        })
-        // Filter Status Registrasi
-        ->when($status, function ($query, $status) {
-            return $query->where('status_registrasi', $status);
-        })
-        ->latest()
-        ->get();
+        // 2. Query Utama dengan Eager Loading + Filter Dinamis
+        $registrasis = RegistrasiPesertaDidik::with('pesertaDidik')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('sekolah_asal', 'like', "%{$search}%")
+                        ->orWhereHas('pesertaDidik', function ($pesertaQuery) use ($search) {
+                            $pesertaQuery->where('nama_lengkap', 'like', "%{$search}%")
+                                ->orWhere('nisn', 'like', "%{$search}%")
+                                ->orWhere('kompetensi_keahlian', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->when($jurusan, function ($query, $jurusan) {
+                return $query->whereHas('pesertaDidik', function ($pesertaQuery) use ($jurusan) {
+                    $pesertaQuery->where('kompetensi_keahlian', $jurusan);
+                });
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('status_registrasi', $status);
+            })
+            ->latest()
+            ->paginate(10);
 
-    // 3. Hitung data untuk Card Statistik di paling atas
-    $countPending   = RegistrasiPesertaDidik::where('status_registrasi', 'Menunggu Verifikasi')->count();
-    $countDisetujui = RegistrasiPesertaDidik::where('status_registrasi', 'Diterima')->count();
-    $countDitolak   = RegistrasiPesertaDidik::where('status_registrasi', 'Ditolak')->count();
+        // 3. Hitung data untuk Card Statistik
+        $totalRegistrasi = RegistrasiPesertaDidik::count();
+        $countPending   = RegistrasiPesertaDidik::where('status_registrasi', 'Menunggu Verifikasi')->count();
+        $countDisetujui = RegistrasiPesertaDidik::where('status_registrasi', 'Diterima')->count();
+        $countDitolak   = RegistrasiPesertaDidik::where('status_registrasi', 'Ditolak')->count();
 
-    return view('admin.registrasi.index', compact(
-        'registrasis',
-        'countPending',
-        'countDisetujui',
-        'countDitolak'
-    ));
-}
+        return view('admin.registrasi.index', compact(
+            'registrasis',
+            'totalRegistrasi',
+            'countPending',
+            'countDisetujui',
+            'countDitolak'
+        ));
+    }
 
     public function create()
     {
-        // Ambil peserta didik yang belum melakukan registrasi agar tidak ganda
         $registeredIds = RegistrasiPesertaDidik::pluck('peserta_didik_id')->toArray();
         $pesertaList = PesertaDidik::whereNotIn('id', $registeredIds)->get();
 
@@ -64,73 +67,102 @@ public function index(Request $request)
 
     protected function getValidationRules($isUpdate = false)
     {
-        $fileRule = $isUpdate ? 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048' : 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
+        $optionalFileRule = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
 
         return [
             'peserta_didik_id'             => $isUpdate ? 'required' : 'required|unique:registrasi_peserta_didik,peserta_didik_id',
-            'kompetensi_keahlian'          => 'required|in:Teknik Otomotif,Teknik Jaringan Komputer dan Telekomunikasi,Pengembangan Perangkat Lunak dan Gim,Desain Pemodelan dan Informasi Bangunan,Manajemen Perkantoran dan Layanan Bisnis,Akuntansi dan Keuangan Lembaga,Seni Pertunjukan',
-            'jenis_pendaftaran'            => 'required|in:Siswa Baru,Pindahan,Kembali Bersekolah',
+            'jenis_pendaftaran'            => 'required|string',
             'sekolah_asal'                 => 'nullable|string|max:255',
             'pernah_paud'                  => 'required|in:Ya,Tidak',
             'hobi'                         => 'nullable|string|max:255',
             'cita_cita'                    => 'nullable|string|max:255',
             'status_registrasi'            => 'required|in:Menunggu Verifikasi,Diterima,Ditolak',
-            'kk'                           => $fileRule,
-            'ktp_ortu'                     => $fileRule,
-            'akta_kelahiran'               => $fileRule,
-            'surat_keterangan_lulus'       => $fileRule,
-            'kartu_kesejahteraan'          => $fileRule,
-            'sptjm'                        => $fileRule,
-            'surat_pernyataan_tata_tertib' => $fileRule,
+
+            'kk'                           => $optionalFileRule,
+            'ktp_ortu'                     => $optionalFileRule,
+            'akta_kelahiran'               => $optionalFileRule,
+            'surat_keterangan_lulus'       => $optionalFileRule,
+            'kartu_kesejahteraan'          => $optionalFileRule,
         ];
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate($this->getValidationRules(false));
+        $customMessages = [
+            'max' => 'Ukuran file :attribute melebihi 2MB. Silakan kompres terlebih dahulu sebelum diunggah.',
+            'mimes' => 'Format file :attribute harus berupa PDF, JPG, JPEG, atau PNG.'
+        ];
 
-        // Proses Unggah Berkas Dokumen berkas
-        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan', 'sptjm', 'surat_pernyataan_tata_tertib'];
+        $validated = $request->validate($this->getValidationRules(false), $customMessages);
+
+        $peserta = PesertaDidik::findOrFail($request->peserta_didik_id);
+        $user = User::where('email', $peserta->nisn)->firstOrFail();
+        $validated['user_id'] = $user->id;
+
+        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan'];
+
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
-                $validated[$field] = $request->file($field)->store('berkas', 'public');
+                $file = $request->file($field);
+                // Langsung simpan file asli tanpa membedakan format gambar atau PDF
+                $validated[$field] = $file->store('berkas', 'public');
             }
         }
 
         RegistrasiPesertaDidik::create($validated);
 
-        return redirect()->route('registrasi.index')->with('success', 'Data registrasi dan dokumen berkas berhasil disimpan.');
+        return redirect()->route('registrasi.index')->with('success', 'Data registrasi berhasil disimpan dan akun siswa telah disinkronkan.');
     }
 
     public function show($id)
     {
-        // Mengambil data registrasi berserta relasi pesertaDidik-nya
         $registrasi = RegistrasiPesertaDidik::with('pesertaDidik')->findOrFail($id);
-
         return view('admin.registrasi.detail', compact('registrasi'));
     }
 
     public function edit($id)
     {
         $registrasi = RegistrasiPesertaDidik::findOrFail($id);
-        $pesertaList = PesertaDidik::all(); // Untuk opsi edit jika diperlukan ganti siswa
+        $pesertaList = PesertaDidik::all();
         return view('admin.registrasi.edit', compact('registrasi', 'pesertaList'));
     }
 
     public function update(Request $request, $id)
     {
-        $registrasi = RegistrasiPesertaDidik::findOrFail($id);
-        $validated = $request->validate($this->getValidationRules(true));
+        $customMessages = [
+            'max' => 'Ukuran file :attribute melebihi 2MB. Silakan kompres terlebih dahulu sebelum diunggah.',
+            'mimes' => 'Format file :attribute harus berupa PDF, JPG, JPEG, atau PNG.'
+        ];
 
-        // Pembaruan File Dokumen Berkas Berkas
-        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan', 'sptjm', 'surat_pernyataan_tata_tertib'];
+        // Mengubah `:attribute` menjadi nama dokumen yang rapi di mata user
+        $customAttributes = [
+            'kk' => 'Kartu Keluarga (KK)',
+            'ktp_ortu' => 'KTP Orang Tua',
+            'akta_kelahiran' => 'Akta Kelahiran',
+            'surat_keterangan_lulus' => 'Surat Keterangan Lulus (SKL)',
+            'kartu_kesejahteraan' => 'Kartu Kesejahteraan',
+        ];
+
+        $registrasi = RegistrasiPesertaDidik::findOrFail($id);
+
+        // Masukkan $customMessages di argumen ke-2, dan $customAttributes di argumen ke-3
+        $validated = $request->validate(
+            $this->getValidationRules(true),
+            $customMessages,
+            $customAttributes
+        );
+
+        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan'];
+
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
-                // Hapus berkas lama jika ada sebelum menimpa berkas baru
+                // Hapus file lama jika ada
                 if ($registrasi->$field) {
                     Storage::disk('public')->delete($registrasi->$field);
                 }
-                $validated[$field] = $request->file($field)->store('berkas', 'public');
+
+                $file = $request->file($field);
+                $validated[$field] = $file->store('berkas', 'public');
             }
         }
 
@@ -143,8 +175,7 @@ public function index(Request $request)
     {
         $registrasi = RegistrasiPesertaDidik::findOrFail($id);
 
-        // Hapus fisik berkas berkas yang melekat pada database sebelum record dihapus
-        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan', 'sptjm', 'surat_pernyataan_tata_tertib'];
+        $fileFields = ['kk', 'ktp_ortu', 'akta_kelahiran', 'surat_keterangan_lulus', 'kartu_kesejahteraan'];
         foreach ($fileFields as $field) {
             if ($registrasi->$field) {
                 Storage::disk('public')->delete($registrasi->$field);

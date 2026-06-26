@@ -37,18 +37,14 @@
         <div class="p-6 space-y-6">
             <div>
                 <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider mb-3">I. Informasi Pendaftaran</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50/50 p-4 rounded-xl border border-slate-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50/50 p-4 rounded-xl border border-slate-100">
                     <div>
-                        <span class="block text-xs font-medium text-slate-400">Kompetensi Keahlian Jurusan</span>
-                        <span class="text-sm font-semibold text-slate-700">{{ $registrasi->kompetensi_keahlian ?? '-' }}</span>
+                        <span class="block text-xs font-medium text-slate-400">Sekolah Asal</span>
+                        <span class="text-sm font-semibold text-slate-700">{{ $registrasi->sekolah_asal ?? '-' }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Jenis Pendaftaran</span>
                         <span class="text-sm font-semibold text-slate-700">{{ $registrasi->jenis_pendaftaran }}</span>
-                    </div>
-                    <div>
-                        <span class="block text-xs font-medium text-slate-400">Sekolah Asal</span>
-                        <span class="text-sm font-semibold text-slate-700">{{ $registrasi->sekolah_asal ?? '-' }}</span>
                     </div>
                     <div>
                         <span class="block text-xs font-medium text-slate-400">Pernah PAUD?</span>
@@ -81,8 +77,6 @@
                         'akta_kelahiran' => 'Akta Kelahiran',
                         'surat_keterangan_lulus' => 'Surat Keterangan Lulus (SKL)',
                         'kartu_kesejahteraan' => 'Kartu Kesejahteraan (KKS/KPS)',
-                        'sptjm' => 'SPTJM Berkas',
-                        'surat_pernyataan_tata_tertib' => 'Surat Pernyataan Tata Tertib Sekolah'
                     ] as $field => $label)
                     <div class="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-50/50 transition">
                         <div class="flex items-center gap-3">
