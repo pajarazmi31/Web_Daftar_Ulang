@@ -35,7 +35,7 @@
                 ];
 
                 // Ambil jurusan dari model registrasi atau peserta didik
-                $jurusanSiswa = $registrasi->kompetensi_keahlian ?? ($peserta->kompetensi_keahlian ?? null);
+                $jurusanSiswa = $peserta->kompetensi_keahlian ?? null;
                 $linkWaJurusan = $waLinks[$jurusanSiswa] ?? null;
                 @endphp
 

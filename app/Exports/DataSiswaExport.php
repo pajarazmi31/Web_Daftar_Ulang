@@ -29,14 +29,14 @@ class DataSiswaExport implements FromQuery, WithHeadings, WithMapping, ShouldAut
                 'peserta_didik.nama_lengkap',
                 'peserta_didik.nisn',
                 'peserta_didik.nik',
-                'registrasi_peserta_didik.kompetensi_keahlian',
+                'peserta_didik.kompetensi_keahlian',
                 'registrasi_peserta_didik.sekolah_asal',
                 'registrasi_peserta_didik.status_registrasi'
             );
 
         // Jika filter jurusan dipilih, saring datanya
         if ($this->jurusan) {
-            $query->where('registrasi_peserta_didik.kompetensi_keahlian', $this->jurusan);
+            $query->where('peserta_didik.kompetensi_keahlian', $this->jurusan);
         }
 
         return $query->latest('peserta_didik.created_at');

@@ -8,7 +8,7 @@
 <div class="max-w-5xl mx-auto" x-data="{
     tab: '{{ old('tab', 'pribadi') }}',
     kwn: '{{ old('kewarganegaraan', $peserta->kewarganegaraan ?? 'WNI') }}',
-    tabs: ['pribadi', 'ayah', 'ibu', 'wali', 'kontak', 'beasiswa']  
+    tabs: ['pribadi', 'ayah', 'ibu', 'wali', 'kontak', 'beasiswa']
 }">
 
     @if(!$peserta)
@@ -37,18 +37,23 @@
         </button>
     </div>
 
-    <form action="{{ route('data-diri.update') }}" method="POST" class="space-y-6 text-sm">
+    <form action="{{ route('data-diri.update') }}" method="POST" class="space-y-6 text-sm" novalidate>
         @csrf
         @method('PUT')
 
         @if ($errors->any())
-        <div class="bg-red-50 text-red-800 p-5 mb-6 rounded-xl border border-red-200 font-sans">
-            <h3 class="font-bold mb-2 text-lg">⚠️ Gagal Menyimpan! Periksa data berikut:</h3>
-            <ul class="list-disc ml-6 line-leading-6">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div class="mx-6 mt-6 p-4 bg-rose-50 border border-rose-150 text-rose-900 rounded-xl text-xs flex items-start gap-3 shadow-sm animate-fade-in">
+            <div class="w-6 h-6 rounded-md bg-rose-500 text-white flex items-center justify-center shrink-0 font-bold">
+                !
+            </div>
+            <div>
+                <h4 class="font-bold text-rose-900 mb-1">Gagal menyimpan data! Periksa kembali isian Anda:</h4>
+                <ul class="list-disc ml-4 space-y-0.5 text-rose-700">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
         @endif
 
@@ -59,42 +64,43 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">1. Nama Lengkap (Sesuai Akta/Ijazah)</label>
-                    <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $peserta->nama_lengkap ?? $peserta->nama) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition">
+                    <label class="block text-slate-600 font-medium mb-1">1. Nama Lengkap (Sesuai Akta/Ijazah) *</label>
+                    <input type="text" name="nama_lengkap" required value="{{ old('nama_lengkap', $peserta->nama_lengkap ?? $peserta->nama) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">2. Jenis Kelamin</label>
-                    <select name="jenis_kelamin" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
+                    <label class="block text-slate-600 font-medium mb-1">2. Jenis Kelamin *</label>
+                    <select name="jenis_kelamin" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-indigo-500 transition">
                         <option value="Laki-laki" {{ old('jenis_kelamin', $peserta->jenis_kelamin) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                         <option value="Perempuan" {{ old('jenis_kelamin', $peserta->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">3. NISN (10 Digit)</label>
-                    <input type="text" name="nisn" value="{{ old('nisn', $peserta->nisn) }}" placeholder="Contoh: 0009321234" maxlength="10" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
+                    <label class="block text-slate-600 font-medium mb-1">3. NISN (10 Digit) *</label>
+                    <input type="text" name="nisn" required value="{{ old('nisn', $peserta->nisn) }}" placeholder="Contoh: 0009321234" maxlength="10" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">4. NIK / KITAS (WNA)</label>
-                    <input type="text" name="nik" value="{{ old('nik', $peserta->nik) }}" maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
+                    <label class="block text-slate-600 font-medium mb-1">4. NIK / KITAS (WNA) *</label>
+                    <input type="text" name="nik" required value="{{ old('nik', $peserta->nik) }}" maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">5. No. Kartu Keluarga (KK)</label>
-                    <input type="text" name="no_kk" value="{{ old('no_kk', $peserta->no_kk) }}" maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
+                    <label class="block text-slate-600 font-medium mb-1">5. No. Kartu Keluarga (KK) *</label>
+                    <input type="text" name="no_kk" required value="{{ old('no_kk', $peserta->no_kk) }}" maxlength="16" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">6. Tempat Lahir</label>
-                    <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir', $peserta->tempat_lahir) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
+                    <label class="block text-slate-600 font-medium mb-1">6. Tempat Lahir *</label>
+                    <input type="text" name="tempat_lahir" required value="{{ old('tempat_lahir', $peserta->tempat_lahir) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">Tanggal Lahir *</label>
+                    <label class="block text-slate-600 font-medium mb-1">7. Tanggal Lahir *</label>
                     <input type="date"
                         name="tanggal_lahir"
+                        required
                         value="{{ old('tanggal_lahir', isset($peserta->tanggal_lahir) ? \Carbon\Carbon::parse($peserta->tanggal_lahir)->format('Y-m-d') : '') }}"
                         class="w-full px-4 py-2 border border-slate-200 rounded-xl @error('tanggal_lahir') border-red-500 @enderror">
                     @error('tanggal_lahir')
@@ -107,8 +113,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">9. Agama & Kepercayaan</label>
-                    <select name="agama" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
+                    <label class="block text-slate-600 font-medium mb-1">9. Agama & Kepercayaan *</label>
+                    <select name="agama" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Islam', 'Kristen Protestan', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu', 'Kepercayaan Kepada Tuhan YME'] as $agama)
                         <option value="{{ $agama }}" {{ old('agama', $peserta->agama) == $agama ? 'selected' : '' }}>{{ $agama }}</option>
                         @endforeach
@@ -117,8 +123,8 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">Jalur Pendaftaran *</label>
-                    <select name="jalur_pendaftaran" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
+                    <label class="block text-slate-600 font-medium mb-1">10. Jalur Pendaftaran *</label>
+                    <select name="jalur_pendaftaran" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Jalur Pendaftaran --</option>
                         @foreach([
                         'Mutasi Anak Guru',
@@ -138,8 +144,8 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">Kompetensi Keahlian Jurusan *</label>
-                    <select name="kompetensi_keahlian" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
+                    <label class="block text-slate-600 font-medium mb-1">11. Kompetensi Keahlian Jurusan *</label>
+                    <select name="kompetensi_keahlian" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Kompetensi Keahlian --</option>
                         @foreach([
                         'Teknik Otomotif',
@@ -160,21 +166,21 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">10. Kewarganegaraan</label>
+                    <label class="block text-slate-600 font-medium mb-1">12. Kewarganegaraan</label>
                     <select name="kewarganegaraan" x-model="kwn" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="WNI">Indonesia (WNI)</option>
                         <option value="WNA">Asing (WNA)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">Nama Negara Asal</label>
+                    <label class="block text-slate-600 font-medium mb-1">13. Nama Negara Asal</label>
                     <input type="text" name="negara_asal" value="{{ old('negara_asal', $peserta->negara_asal) }}" placeholder="Kosongkan jika WNI" class="w-full px-4 py-2 border border-slate-200 rounded-xl" :disabled="kwn === 'WNI'">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-3">
-                    <label class="block text-slate-600 font-medium mb-2">11. Berkebutuhan Khusus</label>
+                    <label class="block text-slate-600 font-medium mb-2">14. Berkebutuhan Khusus</label>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl">
                         @php
                         $bk_saved = is_array($peserta->berkebutuhan_khusus) ? $peserta->berkebutuhan_khusus : json_decode($peserta->berkebutuhan_khusus, true) ?? [];
@@ -198,13 +204,13 @@
             </div>
 
             <div>
-                <label class="block text-slate-600 font-medium mb-1">12. Alamat Jalan / Perumahan / No. Rumah</label>
+                <label class="block text-slate-600 font-medium mb-1">15. Alamat Jalan / Perumahan / No. Rumah</label>
                 <textarea name="alamat" rows="2" class="w-full px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 transition">{{ old('alamat', $peserta->alamat) }}</textarea>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">13. Provinsi <span class="text-red-500">*</span></label>
+                    <label class="block text-slate-600 font-medium mb-1">16. Provinsi <span class="text-red-500">*</span></label>
                     <select id="provinsi" name="provinsi" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500">
                         <option value="">Pilih Provinsi</option>
                         @if(!empty($peserta->provinsi))
@@ -214,7 +220,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">14. Kabupaten/Kota <span class="text-red-500">*</span></label>
+                    <label class="block text-slate-600 font-medium mb-1">17. Kabupaten/Kota <span class="text-red-500">*</span></label>
                     <select id="kabupaten" name="kabupaten" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500" {{ empty($peserta->kabupaten) ? 'disabled' : '' }}>
                         <option value="">Pilih Kabupaten/Kota</option>
                         @if(!empty($peserta->kabupaten))
@@ -224,7 +230,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">15. Kecamatan <span class="text-red-500">*</span></label>
+                    <label class="block text-slate-600 font-medium mb-1">18. Kecamatan <span class="text-red-500">*</span></label>
                     <select id="kecamatan" name="kecamatan" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500" {{ empty($peserta->kecamatan) ? 'disabled' : '' }}>
                         <option value="">Pilih Kecamatan</option>
                         @if(!empty($peserta->kecamatan))
@@ -234,7 +240,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">16. Desa / Kelurahan <span class="text-red-500">*</span></label>
+                    <label class="block text-slate-600 font-medium mb-1">19. Desa / Kelurahan <span class="text-red-500">*</span></label>
                     <select id="desa_kelurahan" name="desa_kelurahan" required class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white focus:ring-2 focus:ring-indigo-500" {{ empty($peserta->desa_kelurahan) ? 'disabled' : '' }}>
                         <option value="">Pilih Desa/Kelurahan</option>
                         @if(!empty($peserta->desa_kelurahan))
@@ -243,35 +249,35 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">17. Nama Dusun / Kampung</label>
+                    <label class="block text-slate-600 font-medium mb-1">20. Nama Dusun / Kampung</label>
                     <input type="text" name="dusun" value="{{ old('dusun', $peserta->dusun) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">18. RT</label>
+                    <label class="block text-slate-600 font-medium mb-1">21. RT</label>
                     <input type="text" name="rt" value="{{ old('rt', $peserta->rt) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">19. RW</label>
+                    <label class="block text-slate-600 font-medium mb-1">22. RW</label>
                     <input type="text" name="rw" value="{{ old('rw', $peserta->rw) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
 
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">20. Kode Pos</label>
+                    <label class="block text-slate-600 font-medium mb-1">23. Kode Pos</label>
                     <input type="text" name="kode_pos" value="{{ old('kode_pos', $peserta->kode_pos) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl font-mono">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">21. Koordinat Lintang</label>
+                    <label class="block text-slate-600 font-medium mb-1">24. Koordinat Lintang</label>
                     <input type="text" name="lintang" value="{{ old('lintang', $peserta->lintang) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">22. Koordinat Bujur</label>
+                    <label class="block text-slate-600 font-medium mb-1">25. Koordinat Bujur</label>
                     <input type="text" name="bujur" value="{{ old('bujur', $peserta->bujur) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">23. Tempat Tinggal</label>
+                    <label class="block text-slate-600 font-medium mb-1">26. Tempat Tinggal</label>
                     <select name="tempat_tinggal" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Bersama Orang Tua', 'Wali', 'Kos', 'Asrama', 'Panti Asuhan'] as $tt)
                         <option value="{{ $tt }}" {{ old('tempat_tinggal', $peserta->tempat_tinggal) == $tt ? 'selected' : '' }}>{{ $tt }}</option>
@@ -279,7 +285,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">24. Moda Transportasi</label>
+                    <label class="block text-slate-600 font-medium mb-1">27. Moda Transportasi</label>
                     <select name="moda_transportasi" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         @foreach(['Jalan Kaki', 'Kendaraan Pribadi', 'Kendaraan Umum', 'Jemputan Sekolah', 'Kereta Api', 'Ojek', 'Lainnya'] as $trans)
                         <option value="{{ $trans }}" {{ old('moda_transportasi', $peserta->moda_transportasi) == $trans ? 'selected' : '' }}>{{ $trans }}</option>
@@ -290,11 +296,11 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2">
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">25. Anak Keberapa (di KK)</label>
+                    <label class="block text-slate-600 font-medium mb-1">28. Anak Keberapa (di KK)</label>
                     <input type="number" name="anak_ke" value="{{ old('anak_ke', $peserta->anak_ke) }}" class="w-full px-4 py-2 border border-slate-200 rounded-xl">
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-medium mb-1">26. Pekerjaan </label>
+                    <label class="block text-slate-600 font-medium mb-1">29. Pekerjaan </label>
                     <select name="pekerjaan_siswa" class="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white">
                         <option value="">-- Pilih Pekerjaan --</option>
                         @foreach(['Tidak Bekerja', 'Nelayan', 'Petani', 'Buruh', 'Lainnya'] as $pekerjaan_siswa)
@@ -305,13 +311,13 @@
                 <div class="flex items-center pt-5">
                     <label class="flex items-center gap-2 cursor-pointer select-none">
                         <input type="checkbox" name="punya_kip" value="1" {{ old('punya_kip', $peserta->punya_kip) == '1' ? 'checked' : '' }} class="w-4 h-4 rounded border-slate-300 text-indigo-600">
-                        <span class="text-slate-700 font-medium text-xs">27. Memiliki Kartu KIP fisik?</span>
+                        <span class="text-slate-700 font-medium text-xs">30. Memiliki Kartu KIP fisik?</span>
                     </label>
                 </div>
                 <div class="flex items-center pt-5">
                     <label class="flex items-center gap-2 cursor-pointer select-none">
                         <input type="checkbox" name="penerima_kip" value="1" {{ old('penerima_kip', $peserta->penerima_kip) == '1' ? 'checked' : '' }} class="w-4 h-4 rounded border-slate-300 text-indigo-600">
-                        <span class="text-slate-700 font-medium text-xs">28. Tetap menerima bantuan KIP?</span>
+                        <span class="text-slate-700 font-medium text-xs">31. Tetap menerima bantuan KIP?</span>
                     </label>
                 </div>
             </div>

@@ -12,50 +12,81 @@ use Illuminate\Support\Facades\Storage;
 
 class RegistrasiController extends Controller
 {
-    public function index(Request $request)
-    {
-        // 1. Ambil input pencarian dan filter
-        $search  = $request->input('search');
-        $jurusan = $request->input('jurusan');
-        $status  = $request->input('status');
+public function index(Request $request)
+{
+    // 1. Ambil input pencarian dan filter
+    $search  = $request->input('search');
+    $jurusan = $request->input('jurusan');
+    $status  = $request->input('status');
 
-        // 2. Query Utama dengan Eager Loading + Filter Dinamis
-        $registrasis = RegistrasiPesertaDidik::with('pesertaDidik')
-            ->when($search, function ($query, $search) {
-                return $query->where(function ($q) use ($search) {
-                    $q->where('sekolah_asal', 'like', "%{$search}%")
-                        ->orWhereHas('pesertaDidik', function ($pesertaQuery) use ($search) {
-                            $pesertaQuery->where('nama_lengkap', 'like', "%{$search}%")
-                                ->orWhere('nisn', 'like', "%{$search}%")
-                                ->orWhere('kompetensi_keahlian', 'like', "%{$search}%");
-                        });
-                });
-            })
-            ->when($jurusan, function ($query, $jurusan) {
-                return $query->whereHas('pesertaDidik', function ($pesertaQuery) use ($jurusan) {
-                    $pesertaQuery->where('kompetensi_keahlian', $jurusan);
-                });
-            })
-            ->when($status, function ($query, $status) {
-                return $query->where('status_registrasi', $status);
-            })
-            ->latest()
-            ->paginate(10);
+    // 2. Query Utama DIBALIK dari model PesertaDidik agar siswa yang belum daftar bisa ditarik
+    $query = PesertaDidik::with('registrasi');
 
-        // 3. Hitung data untuk Card Statistik
-        $totalRegistrasi = RegistrasiPesertaDidik::count();
-        $countPending   = RegistrasiPesertaDidik::where('status_registrasi', 'Menunggu Verifikasi')->count();
-        $countDisetujui = RegistrasiPesertaDidik::where('status_registrasi', 'Diterima')->count();
-        $countDitolak   = RegistrasiPesertaDidik::where('status_registrasi', 'Ditolak')->count();
+    // Filter Berdasarkan Pencarian Teks
+    $query->when($search, function ($q) use ($search) {
+        return $q->where(function ($inner) use ($search) {
+            $inner->where('nama_lengkap', 'like', "%{$search}%")
+                  ->orWhere('nisn', 'like', "%{$search}%")
+                  ->orWhere('kompetensi_keahlian', 'like', "%{$search}%")
+                  ->orWhereHas('registrasi', function ($regQuery) use ($search) {
+                      $regQuery->where('sekolah_asal', 'like', "%{$search}%");
+                  });
+        });
+    });
 
-        return view('admin.registrasi.index', compact(
-            'registrasis',
-            'totalRegistrasi',
-            'countPending',
-            'countDisetujui',
-            'countDitolak'
-        ));
-    }
+    // Filter Berdasarkan Jurusan
+    $query->when($jurusan, function ($q) use ($jurusan) {
+        return $q->where('kompetensi_keahlian', $jurusan);
+    });
+
+    // Filter Berdasarkan Status (Kunci Jawaban Tantangan Ini)
+    $query->when($status, function ($q) use ($status) {
+        if ($status === 'Belum Registrasi') {
+            return $q->doesntHave('registrasi'); // Menampilkan yang tidak punya data registrasi
+        } else {
+            return $q->whereHas('registrasi', function ($regQuery) use ($status) {
+                $regQuery->where('status_registrasi', $status);
+            });
+        }
+    });
+
+    // Jalankan pagination
+    $paginatedSiswa = $query->latest()->paginate(10)->withQueryString();
+
+    // Pemetaan (Mapping) agar strukturnya tetap sama seperti format RegistrasiPesertaDidik di Blade lamamu
+    $registrasis = $paginatedSiswa->setCollection(
+        $paginatedSiswa->getCollection()->map(function ($siswa) {
+            // Jika siswa sudah registrasi, ambil data registrasinya lalu tempelkan relasi siswa ke dalamnya
+            if ($siswa->registrasi) {
+                $reg = $siswa->registrasi;
+                $reg->setRelation('pesertadidik', $siswa);
+                return $reg;
+            }
+            
+            // Jika BELUM registrasi, buat objek tiruan baru di memori agar struktur di Blade tidak error/crash
+            $newReg = new \App\Models\RegistrasiPesertaDidik();
+            $newReg->status_registrasi = 'Belum Registrasi';
+            $newReg->setRelation('pesertadidik', $siswa);
+            return $newReg;
+        })
+    );
+
+    // 3. Hitung data untuk Card Statistik (Query ini tetap dari RegistrasiPesertaDidik)
+    $totalRegistrasi = RegistrasiPesertaDidik::count();
+    $countPending   = RegistrasiPesertaDidik::where('status_registrasi', 'Menunggu Verifikasi')->count();
+    $countDisetujui = RegistrasiPesertaDidik::where('status_registrasi', 'Diterima')->count();
+    $countDitolak   = RegistrasiPesertaDidik::where('status_registrasi', 'Ditolak')->count();
+    $countBelumRegistrasi = PesertaDidik::doesntHave('registrasi')->count();
+
+    return view('admin.registrasi.index', compact(
+        'registrasis',
+        'totalRegistrasi',
+        'countPending',
+        'countDisetujui',
+        'countDitolak',
+        'countBelumRegistrasi'
+    ));
+}
 
     public function create()
     {

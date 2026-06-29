@@ -13,37 +13,36 @@ Integrasi data profil pribadi dengan status registrasi dan kompetensi keahlian s
 @section('content')
 <div class="space-y-6 antialiased text-slate-700">
 
-    <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
-        <form method="GET" action="{{ route('laporan.kepsek') }}" class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-
-            <div class="flex flex-wrap items-center gap-4">
-                <div class="w-full sm:w-64">
-                    <label for="jurusan" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Kompetensi Keahlian</label>
-                    <select name="jurusan" id="jurusan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
-                        <option value="">-- Semua Kompetensi Keahlian --</option>
-                        @foreach($daftarJurusan as $jurusan)
-                        <option value="{{ $jurusan }}" {{ request('jurusan') == $jurusan ? 'selected' : '' }}>{{ $jurusan }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="pt-6">
-                    <button type="submit" class="bg-slate-100 hover:bg-slate-200 text-sm font-medium px-4 py-2 rounded-xl transition duration-150 shadow-sm flex items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-                        </svg>
-                    </button>
-                </div>
+<div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm">
+    <form method="GET" action="{{ route('laporan.kepsek') }}" class="grid grid-cols-1 sm:flex sm:items-end sm:justify-between gap-4">
+        
+        <!-- Bagian Input dan Tombol Filter -->
+        <div class="flex items-end gap-2 w-full sm:w-auto">
+            <div class="flex-1 sm:w-64">
+                <select name="jurusan" id="jurusan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
+                    <option value="">-- Semua Kompetensi Keahlian --</option>
+                    @foreach($daftarJurusan as $jurusan)
+                    <option value="{{ $jurusan }}" {{ request('jurusan') == $jurusan ? 'selected' : '' }}>{{ $jurusan }}</option>
+                    @endforeach
+                </select>
             </div>
+            
+            <!-- Menggunakan md:pt-0 atau menyamakan tinggi agar pas dengan select -->
+            <button type="submit" class="bg-slate-100 hover:bg-slate-200 text-sm font-medium p-2.5 rounded-xl transition duration-150 shadow-sm flex items-center justify-center h-[38px]">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                </svg>
+            </button>
+        </div>
 
-            <div class="pt-2 md:pt-0">
-                <a href="{{ route('laporan.kepsek.export', ['jurusan' => request('jurusan')]) }}" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium px-4 py-2 rounded-xl transition duration-150 shadow-sm inline-flex items-center space-x-1.5">
-                    <span>Export ke Excel</span>
-                </a>
-            </div>
-        </form>
-    </div>
-
+        <!-- Tombol Export otomatis penuh di mobile, proporsional di desktop -->
+        <div class="w-full sm:w-auto">
+            <a href="{{ route('laporan.kepsek.export', ['jurusan' => request('jurusan')]) }}" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition duration-150 shadow-sm inline-flex items-center justify-center space-x-1.5">
+                <span>Export ke Excel</span>
+            </a>
+        </div>
+    </form>
+</div>
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse whitespace-nowrap">

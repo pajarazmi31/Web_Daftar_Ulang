@@ -50,8 +50,13 @@ class DashboardController extends Controller
         $totalRegistrasi = RegistrasiPesertaDidik::count();
 
         // 2. Laporan Keterisian Kuota per Kompetensi Keahlian (Jurusan)
-        $rekapJurusan = RegistrasiPesertaDidik::select('kompetensi_keahlian', DB::raw('count(*) as total'))
+        $rekapJurusan = PesertaDidik::select(
+            'kompetensi_keahlian',
+            DB::raw('count(*) as total')
+        )
+            ->whereNotNull('kompetensi_keahlian')
             ->groupBy('kompetensi_keahlian')
+            ->orderBy('total', 'desc')
             ->get();
 
         // 3. Proporsi Gender

@@ -22,7 +22,7 @@ class LaporanController extends Controller
         $user = Auth::user();
 
         // Ambil daftar kompetensi keahlian unik untuk pilihan filter di view
-        $daftarJurusan = DB::table('registrasi_peserta_didik')
+        $daftarJurusan = DB::table('peserta_didik')
             ->whereNotNull('kompetensi_keahlian')
             ->distinct()
             ->pluck('kompetensi_keahlian');
@@ -31,16 +31,19 @@ class LaporanController extends Controller
         $query = PesertaDidik::query()
             ->join('registrasi_peserta_didik', 'peserta_didik.id', '=', 'registrasi_peserta_didik.peserta_didik_id')
             ->select(
-                'peserta_didik.*', 
-                'registrasi_peserta_didik.kompetensi_keahlian', 
-                'registrasi_peserta_didik.jenis_pendaftaran', 
-                'registrasi_peserta_didik.sekolah_asal', 
+                'peserta_didik.*',
+                'peserta_didik.kompetensi_keahlian',
+                'registrasi_peserta_didik.jenis_pendaftaran',
+                'registrasi_peserta_didik.sekolah_asal',
                 'registrasi_peserta_didik.status_registrasi'
             );
 
         // Terapkan filter Kompetensi Keahlian jika dipilih oleh Kepsek
         if ($request->has('jurusan') && $request->jurusan != '') {
-            $query->where('registrasi_peserta_didik.kompetensi_keahlian', $request->jurusan);
+            $query->where(
+                'peserta_didik.kompetensi_keahlian',
+                $request->jurusan
+            );
         }
 
         // Ambil data dengan pagination agar performa load halaman tetap ringan

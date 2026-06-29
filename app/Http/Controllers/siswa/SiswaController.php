@@ -61,12 +61,21 @@ class SiswaController extends Controller
 
         // 1. OPSI PESAN KUSTOM: Supaya error tidak keluar tulisan 'validation.unique' lagi
         $messages = [
-            'required' => 'Kolom :attribute wajib diisi.',
-            'numeric'  => 'Kolom :attribute harus berupa angka.',
-            'digits'   => 'Kolom :attribute harus berukuran tepat :digits digit.',
-            'unique'   => ':attribute sudah terdaftar di sistem, gunakan nomor lain.',
-            'in'       => 'Pilihan pada kolom :attribute tidak valid.',
-            'date'     => 'Format tanggal pada :attribute salah.',
+            'nama_lengkap.required' => 'Nama lengkap wajib diisi pada Tab Data Diri.',
+            'jenis_kelamin.required' => 'Jenis Kelamin wajib diisi.',
+            'nisn.required' => 'NISN wajib diisi.',
+            'nik.required' => 'NIK wajib diisi.',
+            'no_kk.required' => 'NO KK wajib diisi.',
+            'tempat_lahir.required' => 'Tempat Lahir wajib diisi.',
+            'tanggal_lahir.required' => 'Tanggal Lahir wajib diisi.',
+            'jalur_pendaftaran.required' => 'Jalur Pendaftaran wajib diisi.',
+            'kompetensi_keahlian.required' => 'Kompetensi Keahlian wajib diisi.',
+            'agama.required' => 'Agama wajib diisi.',
+            'kewarganegaraan.required' => 'Kewarganegaraan wajib diisi.',
+            'desa_kelurahan.required' => 'Dasa/Kelurahan wajib diisi.',
+            'kecamatan.required' => 'Kecamatan wajib diisi.',
+            'kabupaten.required' => 'Kabupaten wajib diisi.',
+            'provinsi.required' => 'Provinsi wajib diisi.'
         ];
 
         // 2. LOGIKA VALIDASI: Menggunakan ignore ID (,$peserta->id) pada rule 'unique'
@@ -83,13 +92,13 @@ class SiswaController extends Controller
             'tempat_lahir'       => 'required|string|max:255',
             'tanggal_lahir'      => 'required|date',
             'no_registrasi_akta' => 'nullable|string|max:255',
-            'jalur_pendaftaran'  => 'nullable|string|max:255',
-            'kompetensi_keahlian' => 'nullable|string|max:255',
+            'jalur_pendaftaran'  => 'required|string|max:255',
+            'kompetensi_keahlian' => 'required|string|max:255',
             'agama'              => 'required|string',
             'kewarganegaraan'    => 'required|in:WNI,WNA',
             'negara_asal'        => 'required_if:kewarganegaraan,WNA|nullable|string|max:255',
             'berkebutuhan_khusus' => 'nullable|array',
-            'alamat'             => 'required|string',
+            'alamat'             => 'nullable|string',
             'rt'                 => 'nullable|string|max:5',
             'rw'                 => 'nullable|string|max:5',
             'dusun'              => 'nullable|string|max:255',
@@ -100,9 +109,9 @@ class SiswaController extends Controller
             'kode_pos'           => 'nullable|string|max:10',
             'lintang'            => 'nullable|string|max:255',
             'bujur'              => 'nullable|string|max:255',
-            'tempat_tinggal'     => 'required|string',
-            'moda_transportasi'  => 'required|string',
-            'anak_ke'            => 'required|integer|min:1',
+            'tempat_tinggal'     => 'nullable|string',
+            'moda_transportasi'  => 'nullable|string',
+            'anak_ke'            => 'nullable|integer|min:1',
             'pekerjaan_siswa'    => 'nullable|string',
 
             // Bagian II: Ayah
@@ -166,7 +175,7 @@ class SiswaController extends Controller
         // Eksekusi Update ke Database
         $peserta->update($data);
 
-        return redirect()->route('siswa.data-diri.index')
+        return redirect()->route('registrasi.siswa')
             ->with('success', 'Data diri berhasil diperbarui!')
             ->withInput(['tab' => $request->tab]);
     }

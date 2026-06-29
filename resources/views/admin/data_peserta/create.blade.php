@@ -11,23 +11,29 @@
     tabs: ['pribadi', 'ayah', 'ibu', 'wali', 'kontak', 'beasiswa']
 }">
 
-    <div class="flex border-b border-slate-200 overflow-x-auto mb-6 bg-white rounded-xl p-1.5 shadow-sm min-w-max">
-        <button type="button" @click="tab = 'pribadi'" :class="tab === 'pribadi' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+    <div class="flex border-b border-slate-200 overflow-x-auto mb-6 bg-white rounded-xl p-1.5 shadow-sm w-full whitespace-nowrap scrollbar-none">
+        <button type="button" @click="tab = 'pribadi'" :class="tab === 'pribadi' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             1. Data Pribadi
         </button>
-        <button type="button" @click="tab = 'ayah'" :class="tab === 'ayah' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+        <button type="button" @click="tab = 'ayah'" :class="tab === 'ayah' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             2. Data Ayah
         </button>
-        <button type="button" @click="tab = 'ibu'" :class="tab === 'ibu' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+        <button type="button" @click="tab = 'ibu'" :class="tab === 'ibu' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             3. Data Ibu
         </button>
-        <button type="button" @click="tab = 'wali'" :class="tab === 'wali' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+        <button type="button" @click="tab = 'wali'" :class="tab === 'wali' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             4. Data Wali
         </button>
-        <button type="button" @click="tab = 'kontak'" :class="tab === 'kontak' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+        <button type="button" @click="tab = 'kontak'" :class="tab === 'kontak' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             5. Kontak & Rincian Data
         </button>
-        <button type="button" @click="tab = 'beasiswa'" :class="tab === 'beasiswa' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
+        <button type="button" @click="tab = 'beasiswa'" :class="tab === 'beasiswa' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 shrink-0 text-center py-2.5 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-150">
             6. Beasiswa
         </button>
     </div>

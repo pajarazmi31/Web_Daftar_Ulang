@@ -27,23 +27,56 @@
         </a>
     </div>
 
-    <div class="flex border-b border-slate-200 overflow-x-auto mb-6 bg-white rounded-xl p-1.5 shadow-sm min-w-max">
-        <button @click="activeTab = 'pribadi'" :class="activeTab === 'pribadi' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
+<div class="bg-white rounded-xl p-1.5 shadow-sm mb-6 overflow-x-auto">
+    <div class="flex min-w-[700px] md:min-w-0 gap-1">
+
+        <button
+            @click="activeTab = 'pribadi'"
+            :class="activeTab === 'pribadi'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 whitespace-nowrap text-center py-2 px-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
             1. Biodata Pribadi
         </button>
-        <button @click="activeTab = 'domisili'" :class="activeTab === 'domisili' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
+
+        <button
+            @click="activeTab = 'domisili'"
+            :class="activeTab === 'domisili'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 whitespace-nowrap text-center py-2 px-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
             2. Domisili & Periodik
         </button>
-        <button @click="activeTab = 'orangtua'" :class="activeTab === 'orangtua' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
+
+        <button
+            @click="activeTab = 'orangtua'"
+            :class="activeTab === 'orangtua'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 whitespace-nowrap text-center py-2 px-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
             3. Orang Tua & Wali
         </button>
-        <button @click="activeTab = 'kesejahteraan'" :class="activeTab === 'kesejahteraan' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
+
+        <button
+            @click="activeTab = 'kesejahteraan'"
+            :class="activeTab === 'kesejahteraan'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 whitespace-nowrap text-center py-2 px-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
             4. Kesejahteraan & Beasiswa
         </button>
-        <button @click="activeTab = 'kontak'" :class="activeTab === 'kontak' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'" class="flex-1 text-center py-2 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
+
+        <button
+            @click="activeTab = 'kontak'"
+            :class="activeTab === 'kontak'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-50'"
+            class="flex-1 whitespace-nowrap text-center py-2 px-3 rounded-lg text-xs font-semibold uppercase tracking-wider transition">
             5. Kontak & Akun
         </button>
+
     </div>
+</div>
 
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sm:p-8">
 
@@ -264,7 +297,7 @@
         </div>
 
         <div x-show="activeTab === 'kesejahteraan'" class="space-y-6">
-            <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Status Program Kependudukan & Kesejahteraan</h4>
+            <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-wider border-b border-slate-100 pb-2">Status Program Kesejahteraan</h4>
             <div class="grid sm:grid-cols-2 gap-4 text-sm">
                 <div>
                     <span class="block text-xs font-medium text-slate-400">Status Kepemilikan KIP</span>

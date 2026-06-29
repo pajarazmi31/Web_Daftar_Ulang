@@ -43,6 +43,8 @@ class PesertaDidikController extends Controller
 
     public function importExcel(Request $request)
     {
+        ini_set('max_execution_time', 600);
+
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv|max:2048'
         ]);
